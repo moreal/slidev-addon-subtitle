@@ -1,0 +1,14 @@
+.pdf-caption {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px 32px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #ffffff;
+  font-size: 1.25rem;
+  line-height: 1.6;
+  text-align: center;
+  z-index: 100;
+  pointer-events: none;
+}

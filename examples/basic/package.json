@@ -1,0 +1,12 @@
+{
+  "name": "slidev-subtitle-example",
+  "private": true,
+  "scripts": {
+    "dev": "slidev",
+    "export": "slidev export --with-clicks --output slides-with-captions.pdf"
+  },
+  "dependencies": {
+    "@slidev/cli": "^51",
+    "@slidev/theme-default": "latest"
+  }
+}
