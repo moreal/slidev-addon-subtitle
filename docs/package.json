@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "vitepress dev",
+    "prebuild": "yarn workspace slidev-subtitle-example run build && mkdir -p public/examples/basic && cp -r ../examples/basic/dist/* public/examples/basic/",
     "build": "vitepress build",
     "preview": "vitepress preview"
   },
