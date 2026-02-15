@@ -1,0 +1,12 @@
+pre-commit:
+  parallel: false
+  jobs:
+    - name: typecheck
+      run: yarn check
+    - name: lint
+      glob: "*.{ts,js}"
+      run: oxlint {staged_files}
+    - name: format
+      run: yarn fmt:check
+    - name: test
+      run: yarn test

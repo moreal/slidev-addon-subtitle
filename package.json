@@ -4,10 +4,18 @@
   "type": "module",
   "scripts": {
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "lint": "oxlint",
+    "fmt": "oxfmt --write .",
+    "fmt:check": "oxfmt --check .",
+    "check": "tsc --noEmit",
+    "prepare": "lefthook install"
   },
   "devDependencies": {
     "@types/node": "^22",
+    "lefthook": "^1",
+    "oxfmt": "latest",
+    "oxlint": "^1",
     "typescript": "^5",
     "vitest": "^3"
   },
