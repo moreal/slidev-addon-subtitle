@@ -1,7 +1,14 @@
 {
   "name": "slidev-subtitle",
   "private": true,
+  "workspaces": [
+    "examples/*",
+    "docs"
+  ],
   "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",

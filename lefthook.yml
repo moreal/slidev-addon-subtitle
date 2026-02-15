@@ -5,7 +5,7 @@ pre-commit:
       run: yarn check
     - name: lint
       glob: "*.{ts,js}"
-      run: oxlint {staged_files}
+      run: yarn oxlint {staged_files}
     - name: format
       run: yarn fmt:check
     - name: test

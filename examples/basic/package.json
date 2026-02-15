@@ -3,10 +3,12 @@
   "private": true,
   "scripts": {
     "dev": "slidev",
-    "export": "slidev export --with-clicks --output slides-with-captions.pdf"
+    "export": "slidev export --with-clicks --output slides-with-captions.pdf",
+    "build": "slidev build --base /slidev-subtitle/examples/basic/"
   },
   "dependencies": {
     "@slidev/cli": "^51",
-    "@slidev/theme-default": "latest"
+    "@slidev/theme-default": "latest",
+    "slidev-subtitle": "workspace:*"
   }
 }
