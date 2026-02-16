@@ -28,7 +28,8 @@ export function createCaptionPreparserExtensions(
         }
         return note;
       },
-
+    },
+    {
       transformSlide(content: string, frontmatter: Record<string, any>) {
         const chunks: string[] | undefined = frontmatter[opts.storageKey];
         delete frontmatter[opts.storageKey];
