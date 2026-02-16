@@ -1,23 +1,23 @@
-export function injectCaptionsIntoSlide(
+export function injectSubtitlesIntoSlide(
   content: string,
   frontmatter: Record<string, any>,
-  captionGroups: string[][],
+  subtitleGroups: string[][],
 ): string {
-  if (captionGroups.length === 0) return content;
+  if (subtitleGroups.length === 0) return content;
 
   // For multiple groups, offset v-click elements to align with group boundaries
-  if (captionGroups.length > 1) {
-    content = offsetVClicks(content, captionGroups);
+  if (subtitleGroups.length > 1) {
+    content = offsetVClicks(content, subtitleGroups);
   }
 
   // Flatten all groups — each line gets its own click state / PDF page
-  const captions = captionGroups.flat();
-  if (captions.length === 0) return content;
+  const subtitles = subtitleGroups.flat();
+  if (subtitles.length === 0) return content;
 
-  const escaped = captions.map(escapeHtml);
+  const escaped = subtitles.map(escapeHtml);
   const lines: string[] = [];
 
-  lines.push('<div class="pdf-caption">');
+  lines.push('<div class="pdf-subtitle">');
 
   if (escaped.length === 1) {
     lines.push(`  <div>${escaped[0]}</div>`);
@@ -35,8 +35,8 @@ export function injectCaptionsIntoSlide(
 
   lines.push("</div>");
 
-  if (captions.length > 1) {
-    const requiredClicks = captions.length - 1;
+  if (subtitles.length > 1) {
+    const requiredClicks = subtitles.length - 1;
     const existingClicks = typeof frontmatter.clicks === "number" ? frontmatter.clicks : 0;
     frontmatter.clicks = Math.max(existingClicks, requiredClicks);
   }
@@ -47,16 +47,16 @@ export function injectCaptionsIntoSlide(
 /**
  * Offset auto-numbered `<v-click>` elements so they align with group boundaries.
  *
- * Without offset, v-click #1 appears at $clicks===1. But when each caption line
+ * Without offset, v-click #1 appears at $clicks===1. But when each subtitle line
  * consumes its own click, v-click #1 should appear at the start of group 1
  * (= total lines in group 0).
  */
-function offsetVClicks(content: string, captionGroups: string[][]): string {
+function offsetVClicks(content: string, subtitleGroups: string[][]): string {
   // groupStarts[i] = cumulative line count before group i
   // e.g. groups of [3, 3, 3] → groupStarts = [0, 3, 6, 9]
   const groupStarts: number[] = [0];
   let cumulative = 0;
-  for (const group of captionGroups) {
+  for (const group of subtitleGroups) {
     cumulative += group.length;
     groupStarts.push(cumulative);
   }

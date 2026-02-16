@@ -1,13 +1,13 @@
 # API Reference
 
-## `createCaptionPreparserExtensions`
+## `createSubtitlePreparserExtensions`
 
-Main entry point. Creates Slidev preparser extensions that transform speaker notes into click-synchronized captions.
+Main entry point. Creates Slidev preparser extensions that transform speaker notes into click-synchronized subtitles.
 
 ```typescript
-function createCaptionPreparserExtensions(
+function createSubtitlePreparserExtensions(
   ctx: { mode: string },
-  options?: Partial<CaptionOptions>,
+  options?: Partial<SubtitleOptions>,
 ): PreparserExtension[];
 ```
 
@@ -18,12 +18,12 @@ function createCaptionPreparserExtensions(
 
 **Returns:** An array of preparser extensions to pass to `definePreparserSetup`.
 
-## `CaptionOptions`
+## `SubtitleOptions`
 
-Configuration interface for caption behavior.
+Configuration interface for subtitle behavior.
 
 ```typescript
-interface CaptionOptions {
+interface SubtitleOptions {
   enabledModes: ("dev" | "build" | "export")[];
   preferManualLineBreaks: boolean;
   respectClickMarkers: boolean;
@@ -35,31 +35,34 @@ interface CaptionOptions {
 }
 ```
 
-| Option                   | Type       | Default        | Description                                                  |
-| ------------------------ | ---------- | -------------- | ------------------------------------------------------------ |
-| `enabledModes`           | `string[]` | `["export"]`   | Slidev modes where captions are active                       |
-| `preferManualLineBreaks` | `boolean`  | `true`         | Split notes on newlines                                      |
-| `respectClickMarkers`    | `boolean`  | `true`         | Split notes on `[click]` markers                             |
-| `maxCharsPerLine`        | `number`   | `80`           | Maximum characters per caption line                          |
-| `maxChunksPerSlide`      | `number`   | `Infinity`     | Maximum caption chunks per slide                             |
-| `minCharsPerChunk`       | `number`   | `10`           | Minimum characters before merging short chunks               |
-| `stripNotesOnExport`     | `boolean`  | `false`        | Remove speaker notes from exported output                    |
-| `storageKey`             | `string`   | `"__captions"` | Internal frontmatter key for passing data between transforms |
+| Option                   | Type       | Default         | Description                                                  |
+| ------------------------ | ---------- | --------------- | ------------------------------------------------------------ |
+| `enabledModes`           | `string[]` | `["export"]`    | Slidev modes where subtitles are active                      |
+| `preferManualLineBreaks` | `boolean`  | `true`          | Split notes on newlines                                      |
+| `respectClickMarkers`    | `boolean`  | `true`          | Split notes on `[click]` markers                             |
+| `maxCharsPerLine`        | `number`   | `80`            | Maximum characters per subtitle line                         |
+| `maxChunksPerSlide`      | `number`   | `Infinity`      | Maximum subtitle chunks per slide                            |
+| `minCharsPerChunk`       | `number`   | `10`            | Minimum characters before merging short chunks               |
+| `stripNotesOnExport`     | `boolean`  | `false`         | Remove speaker notes from exported output                    |
+| `storageKey`             | `string`   | `"__subtitles"` | Internal frontmatter key for passing data between transforms |
 
 ## `defaultOptions`
 
-The default `CaptionOptions` object, exported for convenience.
+The default `SubtitleOptions` object, exported for convenience.
 
 ```typescript
-const defaultOptions: CaptionOptions;
+const defaultOptions: SubtitleOptions;
 ```
 
-## `chunkNoteToCaptions`
+## `chunkNoteToSubtitles`
 
-Lower-level function that splits a speaker note string into caption chunks.
+Lower-level function that splits a speaker note string into subtitle chunks.
 
 ```typescript
-function chunkNoteToCaptions(note: string | undefined, options?: Partial<CaptionOptions>): string[];
+function chunkNoteToSubtitles(
+  note: string | undefined,
+  options?: Partial<SubtitleOptions>,
+): string[];
 ```
 
 **Parameters:**
@@ -67,7 +70,7 @@ function chunkNoteToCaptions(note: string | undefined, options?: Partial<Caption
 - `note` — The raw speaker note text
 - `options` — Optional configuration overrides
 
-**Returns:** An array of caption strings.
+**Returns:** An array of subtitle strings.
 
 **Processing steps:**
 
@@ -77,15 +80,15 @@ function chunkNoteToCaptions(note: string | undefined, options?: Partial<Caption
 4. Merge chunks shorter than `minCharsPerChunk`
 5. Truncate to `maxChunksPerSlide`
 
-## `injectCaptionsIntoSlide`
+## `injectSubtitlesIntoSlide`
 
-Lower-level function that injects caption HTML into slide content.
+Lower-level function that injects subtitle HTML into slide content.
 
 ```typescript
-function injectCaptionsIntoSlide(
+function injectSubtitlesIntoSlide(
   content: string,
   frontmatter: Record<string, any>,
-  captions: string[],
+  subtitles: string[],
 ): string;
 ```
 
@@ -93,8 +96,8 @@ function injectCaptionsIntoSlide(
 
 - `content` — The slide markdown content
 - `frontmatter` — The slide frontmatter object (may be mutated to set `clicks`)
-- `captions` — Array of caption strings to inject
+- `subtitles` — Array of subtitle strings to inject
 
-**Returns:** The modified slide content with caption `<div>` elements appended.
+**Returns:** The modified slide content with subtitle `<div>` elements appended.
 
-For a single caption, a static `<div>` is rendered. For multiple captions, Vue `v-if`/`v-else-if`/`v-else` directives are used to synchronize with `$clicks`.
+For a single subtitle, a static `<div>` is rendered. For multiple subtitles, Vue `v-if`/`v-else-if`/`v-else` directives are used to synchronize with `$clicks`.

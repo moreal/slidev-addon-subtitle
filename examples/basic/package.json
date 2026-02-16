@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "slidev",
-    "export": "slidev export --with-clicks --output slides-with-captions.pdf"
+    "export": "slidev export --with-clicks --output slides-with-subtitles.pdf"
   },
   "dependencies": {
     "@slidev/cli": "^51",

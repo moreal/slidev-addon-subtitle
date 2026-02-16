@@ -1,8 +1,8 @@
-import { type CaptionOptions, defaultOptions } from "./types";
+import { type SubtitleOptions, defaultOptions } from "./types";
 
-export function chunkNoteToCaptions(
+export function chunkNoteToSubtitles(
   note: string | undefined,
-  options: Partial<CaptionOptions> = {},
+  options: Partial<SubtitleOptions> = {},
 ): string[][] {
   const opts = { ...defaultOptions, ...options };
 

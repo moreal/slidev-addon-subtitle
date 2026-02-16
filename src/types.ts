@@ -1,4 +1,4 @@
-export interface CaptionOptions {
+export interface SubtitleOptions {
   enabledModes: ("dev" | "build" | "export")[];
   preferManualLineBreaks: boolean;
   respectClickMarkers: boolean;
@@ -9,7 +9,7 @@ export interface CaptionOptions {
   storageKey: string;
 }
 
-export const defaultOptions: CaptionOptions = {
+export const defaultOptions: SubtitleOptions = {
   enabledModes: ["export"],
   preferManualLineBreaks: true,
   respectClickMarkers: true,
@@ -17,5 +17,5 @@ export const defaultOptions: CaptionOptions = {
   maxChunksPerSlide: Infinity,
   minCharsPerChunk: 10,
   stripNotesOnExport: false,
-  storageKey: "__captions",
+  storageKey: "__subtitles",
 };

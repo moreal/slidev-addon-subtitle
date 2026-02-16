@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: slidev-subtitle
-  text: Automatic Captions for Slidev
+  text: Automatic Subtitles for Slidev
   tagline: Turn your speaker notes into click-synchronized subtitles
   actions:
     - theme: brand
@@ -15,11 +15,11 @@ hero:
 
 features:
   - title: Automatic Chunking
-    details: Speaker notes are intelligently split into caption chunks based on line breaks, click markers, and character limits.
+    details: Speaker notes are intelligently split into subtitle chunks based on line breaks, click markers, and character limits.
   - title: Click-synchronized
-    details: Each caption chunk maps to a click step, so subtitles advance in sync with your presentation flow.
+    details: Each subtitle chunk maps to a click step, so subtitles advance in sync with your presentation flow.
   - title: Zero Config
-    details: Works out of the box with sensible defaults. Just add the preparser setup and your notes become captions.
+    details: Works out of the box with sensible defaults. Just add the preparser setup and your notes become subtitles.
 ---
 
 ## Live Demo

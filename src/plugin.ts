@@ -1,26 +1,26 @@
-import { type CaptionOptions, defaultOptions } from "./types";
-import { chunkNoteToCaptions } from "./chunking";
-import { injectCaptionsIntoSlide } from "./injection";
+import { type SubtitleOptions, defaultOptions } from "./types";
+import { chunkNoteToSubtitles } from "./chunking";
+import { injectSubtitlesIntoSlide } from "./injection";
 
 export interface PreparserExtension {
   transformNote?(note: string | undefined, frontmatter: Record<string, any>): string | undefined;
   transformSlide?(content: string, frontmatter: Record<string, any>): string | undefined;
 }
 
-export function createCaptionPreparserExtensions(
+export function createSubtitlePreparserExtensions(
   ctx: { mode: string },
-  options: Partial<CaptionOptions> = {},
+  options: Partial<SubtitleOptions> = {},
 ): PreparserExtension[] {
   const opts = { ...defaultOptions, ...options };
 
-  if (!opts.enabledModes.includes(ctx.mode as CaptionOptions["enabledModes"][number])) {
+  if (!opts.enabledModes.includes(ctx.mode as SubtitleOptions["enabledModes"][number])) {
     return [];
   }
 
   return [
     {
       transformNote(note: string | undefined, frontmatter: Record<string, any>) {
-        const chunks = chunkNoteToCaptions(note, opts);
+        const chunks = chunkNoteToSubtitles(note, opts);
         frontmatter[opts.storageKey] = chunks;
 
         if (opts.stripNotesOnExport) {
@@ -38,7 +38,7 @@ export function createCaptionPreparserExtensions(
           return content;
         }
 
-        return injectCaptionsIntoSlide(content, frontmatter, chunks);
+        return injectSubtitlesIntoSlide(content, frontmatter, chunks);
       },
     },
   ];

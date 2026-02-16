@@ -16,16 +16,16 @@ setup/preparser.ts
 
 ```typescript
 import { definePreparserSetup } from "@slidev/types";
-import { createCaptionPreparserExtensions, defaultOptions } from "slidev-subtitle";
+import { createSubtitlePreparserExtensions, defaultOptions } from "slidev-subtitle";
 
 export default definePreparserSetup(({ mode }) => {
-  return createCaptionPreparserExtensions({ mode }, defaultOptions);
+  return createSubtitlePreparserExtensions({ mode }, defaultOptions);
 });
 ```
 
 ## Usage
 
-Write speaker notes in your slides as usual. The plugin will automatically convert them into captions:
+Write speaker notes in your slides as usual. The plugin will automatically convert them into subtitles:
 
 ```markdown
 ---
@@ -35,23 +35,23 @@ Write speaker notes in your slides as usual. The plugin will automatically conve
 Content here
 
 <!--
-This is the first caption line.
-This becomes the second caption.
+This is the first subtitle line.
+This becomes the second subtitle.
 [click]
 This appears after a click.
 -->
 ```
 
-- Each line in the notes becomes a separate caption chunk
-- Use `[click]` markers to group captions by click steps
-- Captions are rendered as `<div class="pdf-caption">` elements
+- Each line in the notes becomes a separate subtitle chunk
+- Use `[click]` markers to group subtitles by click steps
+- Subtitles are rendered as `<div class="pdf-subtitle">` elements
 
 ## Styling
 
-Add custom CSS to style the caption container:
+Add custom CSS to style the subtitle container:
 
 ```css
-.pdf-caption {
+.pdf-subtitle {
   position: fixed;
   bottom: 2rem;
   left: 50%;
@@ -69,14 +69,14 @@ Add custom CSS to style the caption container:
 You can customize the behavior by passing options:
 
 ```typescript
-createCaptionPreparserExtensions(
+createSubtitlePreparserExtensions(
   { mode },
   {
-    enabledModes: ["export"], // When to enable captions
+    enabledModes: ["export"], // When to enable subtitles
     preferManualLineBreaks: true, // Split on newlines
     respectClickMarkers: true, // Split on [click] markers
     maxCharsPerLine: 80, // Wrap long lines
-    maxChunksPerSlide: Infinity, // Max captions per slide
+    maxChunksPerSlide: Infinity, // Max subtitles per slide
     minCharsPerChunk: 10, // Merge short chunks
     stripNotesOnExport: false, // Remove notes in export
   },

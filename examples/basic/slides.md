@@ -4,23 +4,23 @@ theme: default
 
 # Welcome to Slidev Subtitle Demo
 
-This slide has no presenter notes, so no captions will appear.
+This slide has no presenter notes, so no subtitles will appear.
 
 ---
 
-# Multi-line Captions
+# Multi-line Subtitles
 
-Each line in the presenter notes becomes a separate PDF page with its own caption overlay.
+Each line in the presenter notes becomes a separate PDF page with its own subtitle overlay.
 
 <!--
-This is the first caption that appears on the initial page.
-This is the second caption shown on the next page.
-This is the third and final caption for this slide.
+This is the first subtitle that appears on the initial page.
+This is the second subtitle shown on the next page.
+This is the third and final subtitle for this slide.
 -->
 
 ---
 
-# Click-based Captions
+# Click-based Subtitles
 
 Notes are split into groups using [click] markers.
 
@@ -36,16 +36,16 @@ Notes are split into groups using [click] markers.
 </v-click>
 
 <!--
-This caption appears before any clicks.
+This subtitle appears before any clicks.
 [click]
-After the first click, this caption is shown instead.
+After the first click, this subtitle is shown instead.
 [click]
-The final caption appears after the second click.
+The final subtitle appears after the second click.
 -->
 
 ---
 
-# Multi-line Click Captions
+# Multi-line Click Subtitles
 
 Each [click] group can contain multiple lines, producing several PDF pages per click.
 
@@ -76,10 +76,10 @@ See you next time.
 
 ---
 
-# Auto-wrapped Long Caption
+# Auto-wrapped Long Subtitle
 
 A single long note line will be automatically wrapped at word boundaries.
 
 <!--
-This is a very long presenter note that demonstrates the automatic word-wrapping feature of the caption system, which splits text at natural word boundaries when it exceeds the configured maximum characters per line.
+This is a very long presenter note that demonstrates the automatic word-wrapping feature of the subtitle system, which splits text at natural word boundaries when it exceeds the configured maximum characters per line.
 -->

@@ -2,7 +2,7 @@ import { defineConfig } from "vitepress";
 
 export default defineConfig({
   title: "slidev-subtitle",
-  description: "Automatic click-synchronized captions for Slidev presentations",
+  description: "Automatic click-synchronized subtitles for Slidev presentations",
   base: "/slidev-subtitle/",
 
   themeConfig: {
