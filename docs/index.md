@@ -5,6 +5,9 @@ hero:
   name: slidev-addon-subtitle
   text: Automatic Subtitles for Slidev
   tagline: Turn your speaker notes into click-synchronized subtitles
+  image:
+    src: /logo.svg
+    alt: slidev-addon-subtitle
   actions:
     - theme: brand
       text: Get Started

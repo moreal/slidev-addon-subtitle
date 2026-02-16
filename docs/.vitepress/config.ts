@@ -6,6 +6,7 @@ export default defineConfig({
   base: "/slidev-subtitle/",
 
   themeConfig: {
+    logo: "/logo.svg",
     nav: [
       { text: "Guide", link: "/guide/" },
       { text: "API", link: "/api/" },

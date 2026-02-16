@@ -12,7 +12,8 @@
   "files": [
     "dist",
     "setup",
-    "style.css"
+    "style.css",
+    "assets/logo.svg"
   ],
   "type": "module",
   "exports": {
