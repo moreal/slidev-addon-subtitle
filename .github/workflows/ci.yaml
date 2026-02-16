@@ -79,3 +79,36 @@ jobs:
       - run: yarn install --immutable
       - run: yarn build
       - run: npm publish --provenance --access public
+
+  docs-build:
+    name: Docs Build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: corepack enable
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODEJS_VERSION }}
+          cache: yarn
+      - run: yarn install --immutable
+      - run: npx playwright install --with-deps chromium
+      - uses: actions/configure-pages@v5
+      - run: yarn docs:build
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs/.vitepress/dist
+
+  docs-deploy:
+    name: Docs Deploy
+    needs: docs-build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
