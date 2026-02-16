@@ -3,7 +3,7 @@ import { defineConfig } from "vitepress";
 export default defineConfig({
   title: "slidev-addon-subtitle",
   description: "Automatic click-synchronized subtitles for Slidev presentations",
-  base: "/slidev-subtitle/",
+  base: "/slidev-addon-subtitle/",
 
   themeConfig: {
     logo: "/logo.svg",
@@ -23,6 +23,6 @@ export default defineConfig({
       },
     ],
 
-    socialLinks: [{ icon: "github", link: "https://github.com/moreal/slidev-subtitle" }],
+    socialLinks: [{ icon: "github", link: "https://github.com/moreal/slidev-addon-subtitle" }],
   },
 });
