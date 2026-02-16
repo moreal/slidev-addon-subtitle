@@ -1,5 +1,7 @@
 ---
 theme: default
+addons:
+  - subtitle
 ---
 
 # Welcome to Slidev Subtitle Demo

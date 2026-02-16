@@ -1,10 +1,10 @@
 {
-  "name": "slidev-subtitle-docs",
+  "name": "slidev-addon-subtitle-docs",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vitepress dev",
-    "prebuild": "rm -rf public/examples && yarn workspace slidev-subtitle-example run export && mkdir -p public/examples && cp ../examples/basic/slides-with-subtitles.pdf public/examples/basic.pdf",
+    "prebuild": "rm -rf public/examples && yarn workspace slidev-addon-subtitle-example run export && mkdir -p public/examples && cp ../examples/basic/slides-with-subtitles.pdf public/examples/basic.pdf",
     "build": "vitepress build",
     "preview": "vitepress preview"
   },

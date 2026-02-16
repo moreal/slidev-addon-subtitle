@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: slidev-subtitle
+  name: slidev-addon-subtitle
   text: Automatic Subtitles for Slidev
   tagline: Turn your speaker notes into click-synchronized subtitles
   actions:

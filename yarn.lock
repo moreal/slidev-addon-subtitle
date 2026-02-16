@@ -7949,28 +7949,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slidev-subtitle-docs@workspace:docs":
+"slidev-addon-subtitle-docs@workspace:docs":
   version: 0.0.0-use.local
-  resolution: "slidev-subtitle-docs@workspace:docs"
+  resolution: "slidev-addon-subtitle-docs@workspace:docs"
   dependencies:
     vitepress: "npm:^1.6"
   languageName: unknown
   linkType: soft
 
-"slidev-subtitle-example@workspace:examples/basic":
+"slidev-addon-subtitle-example@workspace:examples/basic":
   version: 0.0.0-use.local
-  resolution: "slidev-subtitle-example@workspace:examples/basic"
+  resolution: "slidev-addon-subtitle-example@workspace:examples/basic"
   dependencies:
     "@slidev/cli": "npm:^51"
     "@slidev/theme-default": "npm:latest"
     playwright-chromium: "npm:^1.58.2"
-    slidev-subtitle: "workspace:*"
+    slidev-addon-subtitle: "workspace:*"
   languageName: unknown
   linkType: soft
 
-"slidev-subtitle@workspace:*, slidev-subtitle@workspace:.":
+"slidev-addon-subtitle@workspace:*, slidev-addon-subtitle@workspace:.":
   version: 0.0.0-use.local
-  resolution: "slidev-subtitle@workspace:."
+  resolution: "slidev-addon-subtitle@workspace:."
   dependencies:
     "@types/node": "npm:^22"
     lefthook: "npm:^1"

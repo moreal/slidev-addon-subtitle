@@ -1,5 +1,5 @@
 {
-  "name": "slidev-subtitle-example",
+  "name": "slidev-addon-subtitle-example",
   "private": true,
   "scripts": {
     "dev": "slidev",
@@ -8,7 +8,7 @@
   "dependencies": {
     "@slidev/cli": "^51",
     "@slidev/theme-default": "latest",
-    "slidev-subtitle": "workspace:*"
+    "slidev-addon-subtitle": "workspace:*"
   },
   "devDependencies": {
     "playwright-chromium": "^1.58.2"

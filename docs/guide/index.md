@@ -3,25 +3,21 @@
 ## Installation
 
 ```bash
-npm install slidev-subtitle
+npm install slidev-addon-subtitle
 ```
 
 ## Setup
 
-Create a preparser setup file in your Slidev project:
+Add the addon to your slide's frontmatter:
 
-```
-setup/preparser.ts
+```markdown
+---
+addons:
+  - subtitle
+---
 ```
 
-```typescript
-import { definePreparserSetup } from "@slidev/types";
-import { createSubtitlePreparserExtensions, defaultOptions } from "slidev-subtitle";
-
-export default definePreparserSetup(({ mode }) => {
-  return createSubtitlePreparserExtensions({ mode }, defaultOptions);
-});
-```
+That's it! The addon automatically registers the preparser and provides default subtitle styles.
 
 ## Usage
 
@@ -48,7 +44,7 @@ This appears after a click.
 
 ## Styling
 
-Add custom CSS to style the subtitle container:
+A default style is automatically provided by the addon. You can customize it by overriding the `.pdf-subtitle` class in your project's styles:
 
 ```css
 .pdf-subtitle {
@@ -66,19 +62,24 @@ Add custom CSS to style the subtitle container:
 
 ## Options
 
-You can customize the behavior by passing options:
+For advanced use cases, you can create your own `setup/preparser.ts` instead of relying on the addon's default:
 
 ```typescript
-createSubtitlePreparserExtensions(
-  { mode },
-  {
-    enabledModes: ["export"], // When to enable subtitles
-    preferManualLineBreaks: true, // Split on newlines
-    respectClickMarkers: true, // Split on [click] markers
-    maxCharsPerLine: 80, // Wrap long lines
-    maxChunksPerSlide: Infinity, // Max subtitles per slide
-    minCharsPerChunk: 10, // Merge short chunks
-    stripNotesOnExport: false, // Remove notes in export
-  },
-);
+import { definePreparserSetup } from "@slidev/types";
+import { createSubtitlePreparserExtensions } from "slidev-addon-subtitle";
+
+export default definePreparserSetup(({ mode }) => {
+  return createSubtitlePreparserExtensions(
+    { mode },
+    {
+      enabledModes: ["export"], // When to enable subtitles
+      preferManualLineBreaks: true, // Split on newlines
+      respectClickMarkers: true, // Split on [click] markers
+      maxCharsPerLine: 80, // Wrap long lines
+      maxChunksPerSlide: Infinity, // Max subtitles per slide
+      minCharsPerChunk: 10, // Merge short chunks
+      stripNotesOnExport: false, // Remove notes in export
+    },
+  );
+});
 ```

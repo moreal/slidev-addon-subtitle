@@ -1,6 +1,10 @@
 {
-  "name": "slidev-subtitle",
+  "name": "slidev-addon-subtitle",
   "private": true,
+  "keywords": [
+    "slidev",
+    "slidev-addon"
+  ],
   "workspaces": [
     "examples/*",
     "docs"
@@ -16,9 +20,9 @@
     "fmt": "oxfmt --write .",
     "fmt:check": "oxfmt --check .",
     "check": "tsc --noEmit",
-    "docs:dev": "yarn workspace slidev-subtitle-docs run dev",
-    "docs:build": "yarn workspace slidev-subtitle-docs run prebuild && yarn workspace slidev-subtitle-docs run build",
-    "docs:preview": "yarn workspace slidev-subtitle-docs run preview",
+    "docs:dev": "yarn workspace slidev-addon-subtitle-docs run dev",
+    "docs:build": "yarn workspace slidev-addon-subtitle-docs run prebuild && yarn workspace slidev-addon-subtitle-docs run build",
+    "docs:preview": "yarn workspace slidev-addon-subtitle-docs run preview",
     "prepare": "lefthook install"
   },
   "devDependencies": {
