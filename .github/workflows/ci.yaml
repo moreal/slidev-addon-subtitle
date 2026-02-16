@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+env:
+  NODEJS_VERSION: 22
+
+jobs:
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: corepack enable
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODEJS_VERSION }}
+          cache: yarn
+      - run: yarn install --immutable
+      - run: yarn fmt:check
+
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: corepack enable
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODEJS_VERSION }}
+          cache: yarn
+      - run: yarn install --immutable
+      - run: yarn check
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: corepack enable
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODEJS_VERSION }}
+          cache: yarn
+      - run: yarn install --immutable
+      - run: yarn lint
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: corepack enable
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODEJS_VERSION }}
+          cache: yarn
+      - run: yarn install --immutable
+      - run: yarn test
