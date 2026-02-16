@@ -1,8 +1,10 @@
 export function injectCaptionsIntoSlide(
   content: string,
   frontmatter: Record<string, any>,
-  captions: string[],
+  captionGroups: string[][],
 ): string {
+  // TODO: use group structure for correct click-based injection
+  const captions = captionGroups.flat();
   if (captions.length === 0) return content;
 
   const escaped = captions.map(escapeHtml);

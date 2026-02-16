@@ -31,7 +31,7 @@ export function createCaptionPreparserExtensions(
     },
     {
       transformSlide(content: string, frontmatter: Record<string, any>) {
-        const chunks: string[] | undefined = frontmatter[opts.storageKey];
+        const chunks: string[][] | undefined = frontmatter[opts.storageKey];
         delete frontmatter[opts.storageKey];
 
         if (!chunks || chunks.length === 0) {

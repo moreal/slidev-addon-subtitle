@@ -3,7 +3,7 @@ import { type CaptionOptions, defaultOptions } from "./types";
 export function chunkNoteToCaptions(
   note: string | undefined,
   options: Partial<CaptionOptions> = {},
-): string[] {
+): string[][] {
   const opts = { ...defaultOptions, ...options };
 
   if (note === undefined || note === null) return [];
@@ -48,7 +48,7 @@ export function chunkNoteToCaptions(
     chunks = chunks.slice(0, opts.maxChunksPerSlide);
   }
 
-  return chunks;
+  return [chunks];
 }
 
 function splitByClickMarkers(text: string): string[] {

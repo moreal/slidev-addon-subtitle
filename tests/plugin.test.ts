@@ -23,7 +23,7 @@ describe("createCaptionPreparserExtensions", () => {
     );
     const fm: Record<string, any> = {};
     noteExt.transformNote!("First caption line\nSecond caption line", fm);
-    expect(fm.__captions).toEqual(["First caption line", "Second caption line"]);
+    expect(fm.__captions).toEqual([["First caption line", "Second caption line"]]);
   });
 
   it("transformNote with stripNotesOnExport returns empty string", () => {
@@ -53,7 +53,7 @@ describe("createCaptionPreparserExtensions", () => {
       { enabledModes: ["export"], storageKey: "__captions" },
     );
     const fm: Record<string, any> = {
-      __captions: ["First caption text", "Second caption text"],
+      __captions: [["First caption text", "Second caption text"]],
     };
     const result = slideExt.transformSlide!("# Slide content", fm);
     expect(result).toContain("pdf-caption");
