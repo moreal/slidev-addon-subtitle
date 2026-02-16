@@ -3,7 +3,14 @@ export function injectCaptionsIntoSlide(
   frontmatter: Record<string, any>,
   captionGroups: string[][],
 ): string {
-  // TODO: use group structure for correct click-based injection
+  if (captionGroups.length === 0) return content;
+
+  // For multiple groups, offset v-click elements to align with group boundaries
+  if (captionGroups.length > 1) {
+    content = offsetVClicks(content, captionGroups);
+  }
+
+  // Flatten all groups — each line gets its own click state / PDF page
   const captions = captionGroups.flat();
   if (captions.length === 0) return content;
 
@@ -35,6 +42,39 @@ export function injectCaptionsIntoSlide(
   }
 
   return content + "\n" + lines.join("\n");
+}
+
+/**
+ * Offset auto-numbered `<v-click>` elements so they align with group boundaries.
+ *
+ * Without offset, v-click #1 appears at $clicks===1. But when each caption line
+ * consumes its own click, v-click #1 should appear at the start of group 1
+ * (= total lines in group 0).
+ */
+function offsetVClicks(content: string, captionGroups: string[][]): string {
+  // groupStarts[i] = cumulative line count before group i
+  // e.g. groups of [3, 3, 3] → groupStarts = [0, 3, 6, 9]
+  const groupStarts: number[] = [0];
+  let cumulative = 0;
+  for (const group of captionGroups) {
+    cumulative += group.length;
+    groupStarts.push(cumulative);
+  }
+
+  let autoIndex = 0;
+
+  return content.replace(/<v-click((?:\s[^>]*)?)>/gi, (match, attrs) => {
+    const attrStr: string = attrs || "";
+    // Skip v-clicks that already have an explicit 'at' attribute
+    if (/\bat\s*=/i.test(attrStr)) {
+      return match;
+    }
+    autoIndex++;
+    if (autoIndex < groupStarts.length) {
+      return `<v-click at="${groupStarts[autoIndex]}"${attrStr}>`;
+    }
+    return match;
+  });
 }
 
 function escapeHtml(text: string): string {

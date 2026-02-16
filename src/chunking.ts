@@ -20,35 +20,53 @@ export function chunkNoteToCaptions(
     groups = [normalized];
   }
 
-  // Step 2: Split by manual line breaks if enabled
-  let chunks: string[];
+  // Step 2: Split by manual line breaks if enabled (per group)
+  let groupedChunks: string[][];
   if (opts.preferManualLineBreaks) {
-    chunks = groups.flatMap((group) =>
+    groupedChunks = groups.map((group) =>
       group
         .split("\n")
         .map((line) => line.trim())
         .filter((line) => line !== ""),
     );
   } else {
-    chunks = groups.map((g) => g.trim()).filter((g) => g !== "");
+    groupedChunks = groups.map((g) => [g.trim()]).filter((g) => g[0] !== "");
   }
 
-  // Step 3: Wrap long lines
+  // Step 3: Wrap long lines (per group)
   if (isFinite(opts.maxCharsPerLine) && opts.maxCharsPerLine > 0) {
-    chunks = chunks.flatMap((chunk) => wrapLine(chunk, opts.maxCharsPerLine));
+    groupedChunks = groupedChunks.map((group) =>
+      group.flatMap((chunk) => wrapLine(chunk, opts.maxCharsPerLine)),
+    );
   }
 
-  // Step 4: Merge short chunks
+  // Step 4: Merge short chunks (per group)
   if (opts.minCharsPerChunk > 0) {
-    chunks = mergeShortChunks(chunks, opts.minCharsPerChunk);
+    groupedChunks = groupedChunks.map((group) => mergeShortChunks(group, opts.minCharsPerChunk));
   }
 
-  // Step 5: Truncate to max
+  // Step 5: Filter empty groups
+  groupedChunks = groupedChunks.filter((group) => group.length > 0);
+
+  // Step 6: Truncate to max (across all groups)
   if (isFinite(opts.maxChunksPerSlide) && opts.maxChunksPerSlide > 0) {
-    chunks = chunks.slice(0, opts.maxChunksPerSlide);
+    let total = 0;
+    const truncated: string[][] = [];
+    for (const group of groupedChunks) {
+      if (total >= opts.maxChunksPerSlide) break;
+      const remaining = opts.maxChunksPerSlide - total;
+      if (group.length <= remaining) {
+        truncated.push(group);
+        total += group.length;
+      } else {
+        truncated.push(group.slice(0, remaining));
+        total += remaining;
+      }
+    }
+    groupedChunks = truncated;
   }
 
-  return [chunks];
+  return groupedChunks;
 }
 
 function splitByClickMarkers(text: string): string[] {
