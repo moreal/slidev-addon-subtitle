@@ -1,6 +1,7 @@
 import { definePreparserSetup } from "@slidev/types";
-import { createSubtitlePreparserExtensions, defaultOptions } from "../src/index";
+import { createSubtitlePreparserExtensions, defaultOptions } from "slidev-addon-subtitle";
 
 export default definePreparserSetup(({ mode }) => {
-  return createSubtitlePreparserExtensions({ mode }, defaultOptions);
+  // Our sync PreparserExtension[] is runtime-compatible with Slidev's async SlidevPreparserExtension[]
+  return createSubtitlePreparserExtensions({ mode: mode ?? "dev" }, defaultOptions) as any;
 });

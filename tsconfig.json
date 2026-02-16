@@ -8,7 +8,8 @@
     "skipLibCheck": true,
     "outDir": "dist",
     "declaration": true,
-    "types": ["vitest/globals", "node"]
+    "types": ["vitest/globals", "node"],
+    "rootDir": "."
   },
-  "include": ["src", "tests"]
+  "include": ["src", "tests", "setup"]
 }

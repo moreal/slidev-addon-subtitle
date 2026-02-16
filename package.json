@@ -9,11 +9,20 @@
     "examples/*",
     "docs"
   ],
+  "files": [
+    "dist",
+    "setup",
+    "style.css"
+  ],
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    }
   },
   "scripts": {
+    "build": "tsdown",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "oxlint",
@@ -30,6 +39,7 @@
     "lefthook": "^1",
     "oxfmt": "latest",
     "oxlint": "^1",
+    "tsdown": "^0.20.3",
     "typescript": "^5",
     "vitest": "^3"
   },
