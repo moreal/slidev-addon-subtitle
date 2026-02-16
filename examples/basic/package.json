@@ -3,12 +3,14 @@
   "private": true,
   "scripts": {
     "dev": "slidev",
-    "export": "slidev export --with-clicks --output slides-with-captions.pdf",
-    "build": "slidev build --base /slidev-subtitle/examples/basic/"
+    "export": "slidev export --with-clicks --output slides-with-captions.pdf"
   },
   "dependencies": {
     "@slidev/cli": "^51",
     "@slidev/theme-default": "latest",
     "slidev-subtitle": "workspace:*"
+  },
+  "devDependencies": {
+    "playwright-chromium": "^1.58.2"
   }
 }

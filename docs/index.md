@@ -25,5 +25,5 @@ features:
 ## Live Demo
 
 <div class="demo-frame">
-  <iframe src="./examples/basic/" loading="lazy"></iframe>
+  <iframe src="./examples/basic.pdf" loading="lazy"></iframe>
 </div>
