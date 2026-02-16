@@ -11,3 +11,7 @@
 <p align="center">
   <a href="https://moreal.github.io/slidev-addon-subtitle/">Documentation</a>
 </p>
+
+## License
+
+[MIT](./LICENSE)

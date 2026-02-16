@@ -4,6 +4,7 @@
     "slidev",
     "slidev-addon"
   ],
+  "license": "MIT",
   "workspaces": [
     "examples/*",
     "docs"
