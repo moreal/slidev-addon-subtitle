@@ -24,12 +24,54 @@ This is the third and final caption for this slide.
 
 Notes are split into groups using [click] markers.
 
+<v-click>
+
+- First item appears on click 1
+
+</v-click>
+<v-click>
+
+- Second item appears on click 2
+
+</v-click>
+
 <!--
 This caption appears before any clicks.
 [click]
 After the first click, this caption is shown instead.
 [click]
 The final caption appears after the second click.
+-->
+
+---
+
+# Multi-line Click Captions
+
+Each [click] group can contain multiple lines, producing several PDF pages per click.
+
+<v-click>
+
+- Revealed on click 1
+
+</v-click>
+<v-click>
+
+- Revealed on click 2
+
+</v-click>
+
+<!--
+Welcome to this slide.
+This is the opening context.
+Let's get started.
+[click]
+Now we move to the first topic.
+Here are some important details.
+Pay attention to this part.
+[click]
+Finally, we wrap up the discussion.
+Thanks for following along.
+See you next time.
 -->
 
 ---
