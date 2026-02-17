@@ -3,7 +3,9 @@
   "private": true,
   "scripts": {
     "dev": "slidev",
-    "export": "slidev export --with-clicks --output slides-with-subtitles.pdf"
+    "dev:ko": "slidev slidev-ko.md",
+    "export": "slidev export --with-clicks --output slides-with-subtitles.pdf",
+    "export:ko": "slidev export slidev-ko.md --with-clicks --output slidev-ko-with-subtitles.pdf"
   },
   "dependencies": {
     "@slidev/cli": "^51",
