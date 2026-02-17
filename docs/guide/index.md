@@ -17,11 +17,16 @@ addons:
 ---
 ```
 
-That's it! The addon automatically registers the preparser and provides default subtitle styles.
+The addon wires itself through `setup/` files:
+
+- `setup/main.ts`: registers `SubtitleDisplay`
+- `setup/transformers.ts`: injects `<SubtitleDisplay />` only in `export` mode and only when a slide note exists
+
+Because of this, default behavior is export-first. In `dev`/`build` mode, subtitles are not auto-injected.
 
 ## Usage
 
-Write speaker notes in your slides as usual. The plugin will automatically convert them into subtitles:
+Write speaker notes as usual:
 
 ```markdown
 ---
@@ -31,55 +36,55 @@ Write speaker notes in your slides as usual. The plugin will automatically conve
 Content here
 
 <!--
-This is the first subtitle line.
-This becomes the second subtitle.
+첫 문장입니다. 둘째 문장입니다.
 [click]
-This appears after a click.
+셋째 문장입니다.
 -->
 ```
 
-- Each line in the notes becomes a separate subtitle chunk
-- Use `[click]` markers to group subtitles by click steps
-- Subtitles are rendered as `<div class="pdf-subtitle">` elements
+## Export behavior
+
+Use Slidev export with clicks:
+
+```bash
+slidev export --with-clicks
+```
+
+The injected subtitle component participates in Slidev click flow, so export pages follow subtitle/click progression.
+
+## Parsing behavior
+
+Default parser behavior (`parseNoteToSubtitleTimeline` + `defaultOptions`):
+
+- Splits notes into timeline entries (default `chunkMode: "sentence"`)
+- Supports `[click]` and `[click:n]`
+- Supports `chunkMode: "line"` for newline-based chunks
+- Wraps by word units using `maxDisplayWidth`
+- Measures display width with fullwidth Unicode characters counted as `2`
+- Prefers balanced wrapping and avoids awkward tiny trailing chunks when possible
 
 ## Styling
 
-A default style is automatically provided by the addon. You can customize it by overriding the `.pdf-subtitle` class in your project's styles:
+Override `.pdf-subtitle` in your slide styles:
 
 ```css
 .pdf-subtitle {
-  position: fixed;
   bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
   font-size: 1.2rem;
-  color: #333;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
 }
 ```
 
-## Options
+## Library API
 
-For advanced use cases, you can create your own `setup/preparser.ts` instead of relying on the addon's default:
+Use parser options directly from your code if you need custom note-to-timeline conversion:
 
-```typescript
-import { definePreparserSetup } from "@slidev/types";
-import { createSubtitlePreparserExtensions } from "slidev-addon-subtitle";
+```ts
+import { defaultOptions, parseNoteToSubtitleTimeline } from "slidev-addon-subtitle";
 
-export default definePreparserSetup(({ mode }) => {
-  return createSubtitlePreparserExtensions(
-    { mode },
-    {
-      enabledModes: ["export"], // When to enable subtitles
-      preferManualLineBreaks: true, // Split on newlines
-      respectClickMarkers: true, // Split on [click] markers
-      maxCharsPerLine: 80, // Wrap long lines
-      maxChunksPerSlide: Infinity, // Max subtitles per slide
-      minCharsPerChunk: 10, // Merge short chunks
-      stripNotesOnExport: false, // Remove notes in export
-    },
-  );
+const timeline = parseNoteToSubtitleTimeline(note, {
+  ...defaultOptions,
+  chunkMode: "sentence", // or "line"
+  sentenceDelimiters: [".", "!", "?", "。", "！", "？", "…", "\n"],
+  maxDisplayWidth: 80, // fullwidth Unicode chars count as width 2
 });
 ```
