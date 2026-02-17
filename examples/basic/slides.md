@@ -4,84 +4,124 @@ addons:
   - subtitle
 ---
 
-# Welcome to Slidev Subtitle Demo
+# slidev-addon-subtitle Demo
 
-This slide has no presenter notes, so no subtitles will appear.
+Turn presenter notes into export-ready, click-aware subtitles.
 
 ---
 
-# Multi-line Subtitles
+# 1) No note, no subtitle
 
-Each line in the presenter notes becomes a separate PDF page with its own subtitle overlay.
+This slide intentionally has no presenter note.
+
+- In built-in setup, subtitle UI is injected only when a note exists.
+- So this slide renders without a subtitle overlay in export.
+
+---
+
+# 2) Basic workflow
+
+1. Write presenter notes as usual.
+2. Add optional click markers (`[click]`, `[click:n]`) to control timing.
+3. Run export with clicks to render subtitle progression.
+
+```bash
+slidev export --with-clicks
+```
 
 <!--
-This is the first subtitle that appears on the initial page.
-This is the second subtitle shown on the next page.
-This is the third and final subtitle for this slide.
+No extra subtitle file is needed.
+Your presenter notes are the subtitle source.
+The exported PDF captures each click step with matching subtitle text.
 -->
 
 ---
 
-# Click-based Subtitles
+# 3) Sentence-based chunking (default)
 
-Notes are split into groups using [click] markers.
+By default, notes are split by sentence boundaries.
+Line breaks are also respected.
 
-<v-click>
-
-- First item appears on click 1
-
-</v-click>
-<v-click>
-
-- Second item appears on click 2
-
-</v-click>
+```md
+<!--
+First sentence. Second sentence!
+Third sentence on the next line.
+-->
+```
 
 <!--
-This subtitle appears before any clicks.
-[click]
-After the first click, this subtitle is shown instead.
-[click]
-The final subtitle appears after the second click.
+First sentence. Second sentence!
+Third sentence on the next line.
 -->
 
 ---
 
-# Multi-line Click Subtitles
+# 4) Click-synchronized subtitles
 
-Each [click] group can contain multiple lines, producing several PDF pages per click.
+Use `[click]` markers in notes to align subtitle timeline with slide clicks.
 
 <v-click>
 
-- Revealed on click 1
+- First visual item appears on click 1
 
 </v-click>
 <v-click>
 
-- Revealed on click 2
+- Second visual item appears on click 2
 
 </v-click>
 
 <!--
-Welcome to this slide.
-This is the opening context.
-Let's get started.
+This subtitle appears before any click.
 [click]
-Now we move to the first topic.
-Here are some important details.
-Pay attention to this part.
+After click 1, this subtitle appears.
 [click]
-Finally, we wrap up the discussion.
-Thanks for following along.
-See you next time.
+After click 2, this final subtitle appears.
 -->
 
 ---
 
-# Auto-wrapped Long Subtitle
+# 5) Explicit click index with `[click:n]`
 
-A single long note line will be automatically wrapped at word boundaries.
+You can jump subtitle timing to a specific click index.
+
+```md
+<!--
+Visible at click 0.
+[click:3]
+Visible from click 3.
+-->
+```
 
 <!--
-This is a very long presenter note that demonstrates the automatic word-wrapping feature of the subtitle system, which splits text at natural word boundaries when it exceeds the configured maximum characters per line.
+Visible at click 0.
+[click:3]
+Visible from click 3.
+-->
+
+---
+
+# 6) Wrapping behavior
+
+- Wrapped by word units
+- Fullwidth Unicode (e.g. Korean) counts as width `2`
+- Tries to avoid awkward tiny trailing chunks
+
+<!--
+This addon splits subtitles by word units and balances them using display width.
+When possible, it also merges awkward tiny trailing tails into the previous line.
+-->
+
+---
+
+# 7) Export result
+
+`--with-clicks` export records each click step as a separate page state.
+
+- Subtitle text follows the same click progression.
+- Useful for shared PDFs that preserve presenter context.
+
+<!--
+When you share the exported PDF, each click stage keeps its matching subtitle.
+That makes it easier to follow the original talk context even without attending live.
 -->
