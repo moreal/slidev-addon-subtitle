@@ -19,20 +19,6 @@ const timeline = computed<SubtitleEntry[]>(() => {
   return parseNoteToSubtitleTimeline(note.value, defaultOptions);
 });
 
-function resolveOffsetDelta(items: SubtitleEntry[]): number {
-  if (items.length === 0) return 0;
-
-  const maxStart = items[items.length - 1].start;
-  const occupied = new Set(items.map((item) => item.start).filter((start) => start >= 1));
-
-  let firstAvailable = 1;
-  while (firstAvailable <= maxStart && occupied.has(firstAvailable)) {
-    firstAvailable += 1;
-  }
-
-  return firstAvailable - 1;
-}
-
 function registerTimeline() {
   clicks.unregister(registrationId);
 
@@ -41,10 +27,9 @@ function registerTimeline() {
   const items = timeline.value;
   const lastStart = items.length > 0 ? items[items.length - 1].start : -1;
   if (lastStart > 0) {
-    const delta = resolveOffsetDelta(items);
     clicks.register(registrationId, {
       max: baseOffset.value + lastStart,
-      delta,
+      delta: 0,
     });
   }
 }

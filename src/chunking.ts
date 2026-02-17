@@ -23,19 +23,23 @@ function buildTimeline(note: string, options: SubtitleOptions): SubtitleEntry[] 
   let cursor = 0;
   let current: string[] = [];
 
-  const flush = () => {
+  const flush = (): number => {
     const text = current.join("\n").trim();
     current = [];
-    if (text === "") return;
+    if (text === "") return 0;
 
     const chunks = splitGroupText(text, options);
+    let emitted = 0;
     for (const chunk of chunks) {
       const trimmed = chunk.trim();
       if (trimmed === "") continue;
 
       entries.push({ start: cursor, text: trimmed });
       cursor += 1;
+      emitted += 1;
     }
+
+    return emitted;
   };
 
   for (const line of lines) {
@@ -45,7 +49,7 @@ function buildTimeline(note: string, options: SubtitleOptions): SubtitleEntry[] 
       continue;
     }
 
-    flush();
+    const emitted = flush();
 
     if (match[1] !== undefined) {
       const parsed = Number(match[1]);
@@ -54,7 +58,9 @@ function buildTimeline(note: string, options: SubtitleOptions): SubtitleEntry[] 
       } else {
         cursor += 1;
       }
-    } else {
+    } else if (emitted === 0) {
+      // If marker is not separating subtitle groups (e.g. leading/consecutive markers),
+      // keep it as an explicit click advance.
       cursor += 1;
     }
   }

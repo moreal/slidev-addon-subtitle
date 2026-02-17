@@ -39,7 +39,7 @@ describe("parseNoteToSubtitleTimeline", () => {
     const note = "첫 문장입니다.\n[click]\n둘째 문장입니다.";
     expect(parseNoteToSubtitleTimeline(note)).toEqual([
       { start: 0, text: "첫 문장입니다." },
-      { start: 2, text: "둘째 문장입니다." },
+      { start: 1, text: "둘째 문장입니다." },
     ]);
   });
 
@@ -80,8 +80,8 @@ describe("parseNoteToSubtitleTimeline", () => {
       { start: 0, text: "첫 줄" },
       { start: 1, text: "둘째 줄" },
       { start: 2, text: "셋째 줄" },
-      { start: 4, text: "넷째 줄" },
-      { start: 5, text: "다섯째 줄" },
+      { start: 3, text: "넷째 줄" },
+      { start: 4, text: "다섯째 줄" },
     ]);
   });
 
