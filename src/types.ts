@@ -1,21 +1,18 @@
 export interface SubtitleOptions {
   enabledModes: ("dev" | "build" | "export")[];
-  preferManualLineBreaks: boolean;
-  respectClickMarkers: boolean;
-  maxCharsPerLine: number;
-  maxChunksPerSlide: number;
-  minCharsPerChunk: number;
-  stripNotesOnExport: boolean;
-  storageKey: string;
+  chunkMode: "sentence" | "line";
+  sentenceDelimiters: string[];
+  maxDisplayWidth: number;
+}
+
+export interface SubtitleEntry {
+  start: number;
+  text: string;
 }
 
 export const defaultOptions: SubtitleOptions = {
   enabledModes: ["export"],
-  preferManualLineBreaks: true,
-  respectClickMarkers: true,
-  maxCharsPerLine: 80,
-  maxChunksPerSlide: Infinity,
-  minCharsPerChunk: 10,
-  stripNotesOnExport: false,
-  storageKey: "__subtitles",
+  chunkMode: "sentence",
+  sentenceDelimiters: [".", "!", "?", "。", "！", "？", "…", "\n"],
+  maxDisplayWidth: 80,
 };

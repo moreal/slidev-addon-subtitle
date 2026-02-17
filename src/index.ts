@@ -1,6 +1,3 @@
-export { chunkNoteToSubtitles } from "./chunking";
-export { injectSubtitlesIntoSlide } from "./injection";
-export { createSubtitlePreparserExtensions } from "./plugin";
+export { parseNoteToSubtitleTimeline } from "./chunking";
 export { defaultOptions } from "./types";
-export type { SubtitleOptions } from "./types";
-export type { PreparserExtension } from "./plugin";
+export type { SubtitleEntry, SubtitleOptions } from "./types";

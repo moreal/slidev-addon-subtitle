@@ -1,96 +1,55 @@
-import { createSubtitlePreparserExtensions } from "../src/plugin";
+import transformersSetup from "../setup/transformers";
 
-describe("createSubtitlePreparserExtensions", () => {
-  it("returns empty array when mode is not in enabledModes", () => {
-    const result = createSubtitlePreparserExtensions({ mode: "dev" }, { enabledModes: ["export"] });
-    expect(result).toEqual([]);
+async function transform(content: string, mode: "dev" | "build" | "export", note?: string): Promise<string> {
+  const setup = await transformersSetup();
+  const transformer = setup.pre?.find(Boolean);
+
+  if (!transformer) {
+    throw new Error("subtitle transformer not found");
+  }
+
+  let code = content;
+  const s = {
+    toString: () => code,
+    prepend: (value: string) => {
+      code = `${value}${code}`;
+    },
+  };
+
+  await transformer({
+    s: s as any,
+    slide: { note } as any,
+    options: { mode } as any,
   });
 
-  it("returns two extensions when mode matches", () => {
-    const result = createSubtitlePreparserExtensions(
-      { mode: "export" },
-      { enabledModes: ["export"] },
-    );
-    expect(result).toHaveLength(2);
-    expect(result[0].transformNote).toBeDefined();
-    expect(result[1].transformSlide).toBeDefined();
+  return code;
+}
+
+describe("subtitle markdown transformer", () => {
+  it("injects SubtitleDisplay in export mode when slide note exists", async () => {
+    const result = await transform("# Slide\n\ncontent", "export", "발표자 노트");
+
+    expect(result).toContain("<SubtitleDisplay />");
+    expect(result).toContain("# Slide");
   });
 
-  it("transformNote stores chunks under storageKey", () => {
-    const [noteExt] = createSubtitlePreparserExtensions(
-      { mode: "export" },
-      { enabledModes: ["export"], storageKey: "__subtitles" },
-    );
-    const fm: Record<string, any> = {};
-    noteExt.transformNote!("First subtitle line\nSecond subtitle line", fm);
-    expect(fm.__subtitles).toEqual([["First subtitle line", "Second subtitle line"]]);
+  it("does not inject in non-export modes", async () => {
+    const dev = await transform("# Slide\n\ncontent", "dev", "발표자 노트");
+    const build = await transform("# Slide\n\ncontent", "build", "발표자 노트");
+
+    expect(dev).toBe("# Slide\n\ncontent");
+    expect(build).toBe("# Slide\n\ncontent");
   });
 
-  it("transformNote with stripNotesOnExport returns empty string", () => {
-    const [noteExt] = createSubtitlePreparserExtensions(
-      { mode: "export" },
-      { enabledModes: ["export"], stripNotesOnExport: true },
-    );
-    const fm: Record<string, any> = {};
-    const result = noteExt.transformNote!("Some note content here", fm);
-    expect(result).toBe("");
+  it("does not inject when slide note is empty", async () => {
+    const result = await transform("# Slide\n\ncontent", "export", "   ");
+
+    expect(result).toBe("# Slide\n\ncontent");
   });
 
-  it("transformNote without strip returns original note", () => {
-    const [noteExt] = createSubtitlePreparserExtensions(
-      { mode: "export" },
-      { enabledModes: ["export"], stripNotesOnExport: false },
-    );
-    const fm: Record<string, any> = {};
-    const note = "Some note content here";
-    const result = noteExt.transformNote!(note, fm);
-    expect(result).toBe(note);
-  });
+  it("does not inject twice", async () => {
+    const result = await transform("<SubtitleDisplay />\n\n# Slide", "export", "발표자 노트");
 
-  it("transformSlide injects subtitles and cleans up storageKey", () => {
-    const [, slideExt] = createSubtitlePreparserExtensions(
-      { mode: "export" },
-      { enabledModes: ["export"], storageKey: "__subtitles" },
-    );
-    const fm: Record<string, any> = {
-      __subtitles: [["First subtitle text", "Second subtitle text"]],
-    };
-    const result = slideExt.transformSlide!("# Slide content", fm);
-    expect(result).toContain("pdf-subtitle");
-    expect(result).toContain("First subtitle text");
-    expect(result).toContain("Second subtitle text");
-    expect(fm.__subtitles).toBeUndefined();
-  });
-
-  it("transformSlide with no stored chunks returns content unchanged", () => {
-    const [, slideExt] = createSubtitlePreparserExtensions(
-      { mode: "export" },
-      { enabledModes: ["export"] },
-    );
-    const fm: Record<string, any> = {};
-    const result = slideExt.transformSlide!("# Slide content", fm);
-    expect(result).toBe("# Slide content");
-  });
-
-  it("end-to-end: transformNote then transformSlide produces correct output", () => {
-    const [noteExt, slideExt] = createSubtitlePreparserExtensions(
-      { mode: "export" },
-      { enabledModes: ["export"] },
-    );
-    const fm: Record<string, any> = {};
-    const note = "First subtitle line\n[click]\nSecond subtitle line\n[click]\nThird subtitle line";
-
-    noteExt.transformNote!(note, fm);
-    const result = slideExt.transformSlide!("# My Slide", fm);
-
-    expect(result).toContain("# My Slide");
-    expect(result).toContain('v-if="$clicks === 0"');
-    expect(result).toContain('v-else-if="$clicks === 1"');
-    expect(result).toContain("v-else");
-    expect(result).toContain("First subtitle line");
-    expect(result).toContain("Second subtitle line");
-    expect(result).toContain("Third subtitle line");
-    expect(fm.clicks).toBe(2);
-    expect(fm.__subtitles).toBeUndefined();
+    expect(result).toBe("<SubtitleDisplay />\n\n# Slide");
   });
 });

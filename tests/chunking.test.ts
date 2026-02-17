@@ -1,133 +1,112 @@
-import { chunkNoteToSubtitles } from "../src/chunking";
+import { parseNoteToSubtitleTimeline } from "../src/chunking";
 
-describe("chunkNoteToSubtitles", () => {
+describe("parseNoteToSubtitleTimeline", () => {
   it("returns empty array for undefined", () => {
-    expect(chunkNoteToSubtitles(undefined)).toEqual([]);
+    expect(parseNoteToSubtitleTimeline(undefined)).toEqual([]);
   });
 
-  it("returns empty array for empty string", () => {
-    expect(chunkNoteToSubtitles("")).toEqual([]);
+  it("returns empty array for empty text", () => {
+    expect(parseNoteToSubtitleTimeline("   \n  ")).toEqual([]);
   });
 
-  it("returns empty array for whitespace only", () => {
-    expect(chunkNoteToSubtitles("   \n  \n  ")).toEqual([]);
-  });
-
-  it("returns single group with single chunk for single line", () => {
-    expect(chunkNoteToSubtitles("Hello world, this is a test")).toEqual([
-      ["Hello world, this is a test"],
+  it("splits by sentence delimiters and newlines", () => {
+    const note = "첫 문장입니다. 둘째 문장입니다!\n셋째 문장입니다?";
+    expect(parseNoteToSubtitleTimeline(note)).toEqual([
+      { start: 0, text: "첫 문장입니다." },
+      { start: 1, text: "둘째 문장입니다!" },
+      { start: 2, text: "셋째 문장입니다?" },
     ]);
   });
 
-  it("splits multi-line notes into one chunk per line within a single group", () => {
-    const note = "This is the first line\nThis is the second line\nThis is the third line";
-    expect(chunkNoteToSubtitles(note)).toEqual([
-      ["This is the first line", "This is the second line", "This is the third line"],
+  it("keeps decimal numbers in one sentence", () => {
+    const note = "점수는 3.14입니다. 다음 문장입니다.";
+    expect(parseNoteToSubtitleTimeline(note)).toEqual([
+      { start: 0, text: "점수는 3.14입니다." },
+      { start: 1, text: "다음 문장입니다." },
     ]);
   });
 
-  it("normalizes CRLF to LF", () => {
-    const note = "This is the first line\r\nThis is the second line\r\nThis is the third line";
-    expect(chunkNoteToSubtitles(note)).toEqual([
-      ["This is the first line", "This is the second line", "This is the third line"],
+  it("supports line chunk mode", () => {
+    const note = "첫 줄\n둘째 줄\n셋째 줄";
+    expect(parseNoteToSubtitleTimeline(note, { chunkMode: "line" })).toEqual([
+      { start: 0, text: "첫 줄" },
+      { start: 1, text: "둘째 줄" },
+      { start: 2, text: "셋째 줄" },
     ]);
   });
 
-  it("splits on [click] markers into separate groups", () => {
-    const note = "Before the click marker\n[click]\nAfter the click marker";
-    expect(chunkNoteToSubtitles(note)).toEqual([
-      ["Before the click marker"],
-      ["After the click marker"],
+  it("advances starts when [click] markers are present", () => {
+    const note = "첫 문장입니다.\n[click]\n둘째 문장입니다.";
+    expect(parseNoteToSubtitleTimeline(note)).toEqual([
+      { start: 0, text: "첫 문장입니다." },
+      { start: 2, text: "둘째 문장입니다." },
     ]);
   });
 
-  it("recognizes [click:N] markers and removes them", () => {
-    const note = "Part one of the note\n[click:3]\nPart two of the note";
-    expect(chunkNoteToSubtitles(note)).toEqual([
-      ["Part one of the note"],
-      ["Part two of the note"],
+  it("applies explicit [click:n] starts", () => {
+    const note = "첫 문장입니다.\n[click:3]\n둘째 문장입니다.";
+    expect(parseNoteToSubtitleTimeline(note)).toEqual([
+      { start: 0, text: "첫 문장입니다." },
+      { start: 3, text: "둘째 문장입니다." },
     ]);
   });
 
-  it("handles case-insensitive click markers", () => {
-    const note = "Before the marker\n[CLICK]\nAfter the marker";
-    expect(chunkNoteToSubtitles(note)).toEqual([["Before the marker"], ["After the marker"]]);
+  it("supports markers before first subtitle", () => {
+    const note = "[click:2]\n첫 문장입니다.";
+    expect(parseNoteToSubtitleTimeline(note)).toEqual([{ start: 2, text: "첫 문장입니다." }]);
   });
 
-  it("limits output with maxChunksPerSlide", () => {
-    const note =
-      "First long line here\nSecond long line here\nThird long line here\nFourth long line here\nFifth long line here";
-    expect(chunkNoteToSubtitles(note, { maxChunksPerSlide: 3 })).toEqual([
-      ["First long line here", "Second long line here", "Third long line here"],
+  it("normalizes invalid or overlapping starts to monotonic order", () => {
+    const note = "첫 문장입니다.\n[click:1]\n둘째 문장입니다.\n[click:1]\n셋째 문장입니다.";
+    expect(parseNoteToSubtitleTimeline(note)).toEqual([
+      { start: 0, text: "첫 문장입니다." },
+      { start: 1, text: "둘째 문장입니다." },
+      { start: 2, text: "셋째 문장입니다." },
     ]);
   });
 
-  it("wraps long lines at word boundary", () => {
-    const note =
-      "This is a very long line that should be wrapped at the word boundary when it exceeds the maximum characters per line limit";
-    const result = chunkNoteToSubtitles(note, { maxCharsPerLine: 50 });
-    expect(result.length).toBe(1);
-    for (const chunk of result[0]) {
-      expect(chunk.length).toBeLessThanOrEqual(50);
-    }
-    expect(result[0].length).toBeGreaterThan(1);
-  });
-
-  it("merges short chunks with adjacent", () => {
-    const note = "Hi\nThis is a longer line that should not be merged";
-    const result = chunkNoteToSubtitles(note, { minCharsPerChunk: 10 });
-    expect(result).toEqual([["Hi This is a longer line that should not be merged"]]);
-  });
-
-  it("does not split by line breaks when preferManualLineBreaks is false", () => {
-    const note = "First line of the note\nSecond line of the note\nThird line of the note";
-    const result = chunkNoteToSubtitles(note, {
-      preferManualLineBreaks: false,
-    });
-    expect(result).toEqual([
-      ["First line of the note\nSecond line of the note\nThird line of the note"],
+  it("supports custom sentence delimiters", () => {
+    const note = "alpha; beta; gamma";
+    expect(parseNoteToSubtitleTimeline(note, { sentenceDelimiters: [";", "\n"] })).toEqual([
+      { start: 0, text: "alpha;" },
+      { start: 1, text: "beta;" },
+      { start: 2, text: "gamma" },
     ]);
   });
 
-  it("ignores click markers when respectClickMarkers is false", () => {
-    const note = "Before the marker\n[click]\nAfter the marker";
-    const result = chunkNoteToSubtitles(note, {
-      respectClickMarkers: false,
-      minCharsPerChunk: 0,
-    });
-    expect(result).toEqual([["Before the marker", "[click]", "After the marker"]]);
+  it("keeps explicit click offsets when a marker appears between multiline groups", () => {
+    const note = "첫 줄\n둘째 줄\n셋째 줄\n[click]\n넷째 줄\n다섯째 줄";
+    expect(parseNoteToSubtitleTimeline(note, { chunkMode: "line" })).toEqual([
+      { start: 0, text: "첫 줄" },
+      { start: 1, text: "둘째 줄" },
+      { start: 2, text: "셋째 줄" },
+      { start: 4, text: "넷째 줄" },
+      { start: 5, text: "다섯째 줄" },
+    ]);
   });
 
-  it("filters empty lines between content", () => {
-    const note = "First line of text\n\nSecond line of text";
-    expect(chunkNoteToSubtitles(note)).toEqual([["First line of text", "Second line of text"]]);
+  it("wraps by word units using display width", () => {
+    const note = "hello 안녕 world 테스트";
+    expect(parseNoteToSubtitleTimeline(note, { chunkMode: "line", maxDisplayWidth: 10 })).toEqual([
+      { start: 0, text: "hello" },
+      { start: 1, text: "안녕 world" },
+      { start: 2, text: "테스트" },
+    ]);
   });
 
-  it("preserves group boundaries when [click] groups have multiple lines", () => {
-    const note = [
-      "Welcome to this slide.",
-      "This is the opening context.",
-      "Let's get started.",
-      "[click]",
-      "Now we move to the first topic.",
-      "Here are some important details.",
-      "Pay attention to this part.",
-      "[click]",
-      "Finally, we wrap up the discussion.",
-      "Thanks for following along.",
-      "See you next time.",
-    ].join("\n");
+  it("does not split a single long word even when it exceeds maxDisplayWidth", () => {
+    const note = "supercalifragilistic";
+    expect(parseNoteToSubtitleTimeline(note, { chunkMode: "line", maxDisplayWidth: 5 })).toEqual([
+      { start: 0, text: "supercalifragilistic" },
+    ]);
+  });
 
-    const result = chunkNoteToSubtitles(note);
-
-    expect(result).toEqual([
-      ["Welcome to this slide.", "This is the opening context.", "Let's get started."],
-      [
-        "Now we move to the first topic.",
-        "Here are some important details.",
-        "Pay attention to this part.",
-      ],
-      ["Finally, we wrap up the discussion.", "Thanks for following along.", "See you next time."],
+  it("avoids tiny trailing tail chunks when a small overflow creates better balance", () => {
+    const note = "aaaaaaaaaaaaaaa bbbbbbbbbbbbbbb ccccccccccccccc 요";
+    expect(parseNoteToSubtitleTimeline(note, { chunkMode: "line", maxDisplayWidth: 16 })).toEqual([
+      { start: 0, text: "aaaaaaaaaaaaaaa" },
+      { start: 1, text: "bbbbbbbbbbbbbbb" },
+      { start: 2, text: "ccccccccccccccc 요" },
     ]);
   });
 });
