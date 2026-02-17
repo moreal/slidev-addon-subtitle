@@ -434,7 +434,7 @@ function isFullWidthCodePoint(codePoint: number): boolean {
     codePoint <= 0x115f ||
     codePoint === 0x2329 ||
     codePoint === 0x232a ||
-    ((codePoint >= 0x2e80 && codePoint <= 0x3247) && codePoint !== 0x303f) ||
+    (codePoint >= 0x2e80 && codePoint <= 0x3247 && codePoint !== 0x303f) ||
     (codePoint >= 0x3250 && codePoint <= 0x4dbf) ||
     (codePoint >= 0x4e00 && codePoint <= 0xa4c6) ||
     (codePoint >= 0xa960 && codePoint <= 0xa97c) ||
@@ -458,7 +458,9 @@ function resolveOptions(options: Partial<SubtitleOptions>): SubtitleOptions {
       : Number.POSITIVE_INFINITY;
 
   return {
-    enabledModes: options.enabledModes ? [...options.enabledModes] : [...defaultOptions.enabledModes],
+    enabledModes: options.enabledModes
+      ? [...options.enabledModes]
+      : [...defaultOptions.enabledModes],
     chunkMode: options.chunkMode ?? defaultOptions.chunkMode,
     sentenceDelimiters: options.sentenceDelimiters
       ? [...options.sentenceDelimiters]

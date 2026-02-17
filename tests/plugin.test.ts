@@ -1,6 +1,10 @@
 import transformersSetup from "../setup/transformers";
 
-async function transform(content: string, mode: "dev" | "build" | "export", note?: string): Promise<string> {
+async function transform(
+  content: string,
+  mode: "dev" | "build" | "export",
+  note?: string,
+): Promise<string> {
   const setup = await transformersSetup();
   const transformer = setup.pre?.find(Boolean);
 

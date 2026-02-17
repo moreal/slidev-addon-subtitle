@@ -11,7 +11,9 @@ function injectSubtitleDisplay(ctx: MarkdownTransformContext): void {
   const source = ctx.s.toString();
   if (source.includes("<SubtitleDisplay")) return;
 
-  const prefix = source.startsWith("\n") ? `${SUBTITLE_COMPONENT_TAG}\n` : `${SUBTITLE_COMPONENT_TAG}\n\n`;
+  const prefix = source.startsWith("\n")
+    ? `${SUBTITLE_COMPONENT_TAG}\n`
+    : `${SUBTITLE_COMPONENT_TAG}\n\n`;
   ctx.s.prepend(prefix);
 }
 
