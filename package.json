@@ -31,8 +31,12 @@
     "fmt:check": "oxfmt --check .",
     "check": "tsc --noEmit",
     "docs:dev": "yarn workspace slidev-addon-subtitle-docs run dev",
-    "docs:build": "yarn workspace slidev-addon-subtitle-docs run prebuild && yarn workspace slidev-addon-subtitle-docs run build",
+    "docs:build": "mise x -- bazelisk build //docs:site_archive && rm -rf docs/.vitepress/dist && mkdir -p docs/.vitepress/dist && tar -xf bazel-bin/docs/site.tar -C docs/.vitepress/dist",
     "docs:preview": "yarn workspace slidev-addon-subtitle-docs run preview",
+    "bazel:check": "mise x -- bazelisk build //:ci_checks",
+    "bazel:build": "mise x -- bazelisk build //:lib_build",
+    "bazel:docs": "mise x -- bazelisk build //docs:site_archive",
+    "ci": "mise x -- bazelisk build //:ci_all",
     "prepare": "lefthook install"
   },
   "devDependencies": {

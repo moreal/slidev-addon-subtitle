@@ -1,0 +1,11 @@
+node_modules
+dist
+tmp
+
+docs/node_modules
+docs/.vitepress/cache
+docs/.vitepress/dist
+docs/public/examples
+
+examples/basic/node_modules
+examples/basic/dist

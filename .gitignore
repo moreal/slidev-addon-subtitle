@@ -5,3 +5,4 @@ dist/
 !.yarn/releases
 !.yarn/patches
 !.yarn/plugins
+bazel-*

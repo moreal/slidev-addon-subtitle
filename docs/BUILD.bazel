@@ -1,0 +1,47 @@
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "docs_sources",
+    srcs = glob(
+        ["**/*"],
+        exclude = [
+            ".vitepress/cache/**",
+            ".vitepress/dist/**",
+            "node_modules/**",
+            "public/examples/**",
+        ],
+    ),
+)
+
+genrule(
+    name = "site_archive",
+    srcs = [
+        ":docs_sources",
+        "//:lib_sources",
+        "//examples/basic:pdf_en",
+        "//examples/basic:pdf_ko",
+    ],
+    outs = ["site.tar"],
+    cmd = """
+set -euo pipefail
+EXEC_ROOT="$$(pwd)"
+OUT_ARCHIVE="$$EXEC_ROOT/$@"
+OUT_DIR="$$EXEC_ROOT/$(@D)/site"
+PDF_EN="$$EXEC_ROOT/$(location //examples/basic:pdf_en)"
+PDF_KO="$$EXEC_ROOT/$(location //examples/basic:pdf_ko)"
+if [ -L package.json ]; then
+  SOURCE_ROOT="$$(cd "$$(dirname "$$(readlink package.json)")" && pwd)"
+else
+  SOURCE_ROOT="$$EXEC_ROOT"
+fi
+cd "$$SOURCE_ROOT"
+rm -rf "$$OUT_DIR"
+mkdir -p docs/public/examples "$$OUT_DIR"
+cp "$$PDF_EN" docs/public/examples/basic.pdf
+cp "$$PDF_KO" docs/public/examples/basic-ko.pdf
+yarn workspace slidev-addon-subtitle-docs run build --outDir "$$OUT_DIR"
+tar -cf "$$OUT_ARCHIVE" -C "$$OUT_DIR" .
+""",
+    local = True,
+    tags = ["no-sandbox"],
+)

@@ -1,0 +1,77 @@
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "example_sources",
+    srcs = glob(
+        ["**/*"],
+        exclude = [
+            "*.pdf",
+            "dist/**",
+            "node_modules/**",
+        ],
+    ),
+)
+
+filegroup(
+    name = "pdf_en_inputs",
+    srcs = [
+        "package.json",
+        "slides.md",
+    ],
+)
+
+filegroup(
+    name = "pdf_ko_inputs",
+    srcs = [
+        "package.json",
+        "slidev-ko.md",
+    ],
+)
+
+genrule(
+    name = "pdf_en",
+    srcs = [
+        ":pdf_en_inputs",
+        "//:lib_sources",
+    ],
+    outs = ["basic.pdf"],
+    cmd = """
+set -euo pipefail
+EXEC_ROOT="$$(pwd)"
+OUT_PATH="$$EXEC_ROOT/$@"
+if [ -L package.json ]; then
+  SOURCE_ROOT="$$(cd "$$(dirname "$$(readlink package.json)")" && pwd)"
+else
+  SOURCE_ROOT="$$EXEC_ROOT"
+fi
+cd "$$SOURCE_ROOT"
+yarn workspace slidev-addon-subtitle run build
+yarn workspace slidev-addon-subtitle-example exec slidev export --with-clicks --output "$$OUT_PATH"
+""",
+    local = True,
+    tags = ["no-sandbox"],
+)
+
+genrule(
+    name = "pdf_ko",
+    srcs = [
+        ":pdf_ko_inputs",
+        "//:lib_sources",
+    ],
+    outs = ["basic-ko.pdf"],
+    cmd = """
+set -euo pipefail
+EXEC_ROOT="$$(pwd)"
+OUT_PATH="$$EXEC_ROOT/$@"
+if [ -L package.json ]; then
+  SOURCE_ROOT="$$(cd "$$(dirname "$$(readlink package.json)")" && pwd)"
+else
+  SOURCE_ROOT="$$EXEC_ROOT"
+fi
+cd "$$SOURCE_ROOT"
+yarn workspace slidev-addon-subtitle run build
+yarn workspace slidev-addon-subtitle-example exec slidev export slidev-ko.md --with-clicks --output "$$OUT_PATH"
+""",
+    local = True,
+    tags = ["no-sandbox"],
+)

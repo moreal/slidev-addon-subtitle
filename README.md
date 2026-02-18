@@ -12,6 +12,21 @@
   <a href="https://moreal.github.io/slidev-addon-subtitle/">Documentation</a>
 </p>
 
+## Development workflow
+
+```bash
+mise trust
+mise install
+mise x -- bazelisk build //:ci_all
+mise x -- bazelisk build //docs:site_archive
+```
+
+To build docs into `docs/.vitepress/dist` for local preview:
+
+```bash
+yarn docs:build
+```
+
 ## License
 
 [MIT](./LICENSE)

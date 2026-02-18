@@ -18,8 +18,11 @@ jobs:
         with:
           node-version: ${{ env.NODEJS_VERSION }}
           cache: yarn
+      - uses: jdx/mise-action@v2
       - run: yarn install --immutable
-      - run: yarn fmt:check
+      - run: mise trust
+      - run: mise install
+      - run: mise x -- bazelisk build //:format_check
 
   typecheck:
     name: Typecheck
@@ -31,8 +34,11 @@ jobs:
         with:
           node-version: ${{ env.NODEJS_VERSION }}
           cache: yarn
+      - uses: jdx/mise-action@v2
       - run: yarn install --immutable
-      - run: yarn check
+      - run: mise trust
+      - run: mise install
+      - run: mise x -- bazelisk build //:typecheck
 
   lint:
     name: Lint
@@ -44,8 +50,11 @@ jobs:
         with:
           node-version: ${{ env.NODEJS_VERSION }}
           cache: yarn
+      - uses: jdx/mise-action@v2
       - run: yarn install --immutable
-      - run: yarn lint
+      - run: mise trust
+      - run: mise install
+      - run: mise x -- bazelisk build //:lint_check
 
   test:
     name: Test
@@ -57,8 +66,11 @@ jobs:
         with:
           node-version: ${{ env.NODEJS_VERSION }}
           cache: yarn
+      - uses: jdx/mise-action@v2
       - run: yarn install --immutable
-      - run: yarn test
+      - run: mise trust
+      - run: mise install
+      - run: mise x -- bazelisk build //:unit_tests
 
   publish:
     name: Publish
@@ -76,7 +88,11 @@ jobs:
           node-version: ${{ env.NODEJS_VERSION }}
           cache: yarn
           registry-url: https://registry.npmjs.org
+      - uses: jdx/mise-action@v2
       - run: yarn install --immutable
+      - run: mise trust
+      - run: mise install
+      - run: mise x -- bazelisk build //:lib_build
       - run: yarn build
       - run: npm publish --provenance --access public
 
@@ -91,14 +107,17 @@ jobs:
         with:
           node-version: ${{ env.NODEJS_VERSION }}
           cache: yarn
+      - uses: jdx/mise-action@v2
       - run: yarn install --immutable
+      - run: mise trust
+      - run: mise install
       - run: npx playwright install --with-deps chromium
       - uses: actions/configure-pages@v5
-      - run: yarn build
-      - run: yarn docs:build
+      - run: mise x -- bazelisk build //docs:site_archive
+      - run: rm -rf site-dist && mkdir -p site-dist && tar -xf bazel-bin/docs/site.tar -C site-dist
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: docs/.vitepress/dist
+          path: site-dist
 
   docs-deploy:
     name: Docs Deploy

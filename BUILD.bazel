@@ -1,0 +1,205 @@
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "root_sources",
+    srcs = glob(
+        [
+            "assets/**/*",
+            "setup/**/*",
+            "src/**/*",
+            "tests/**/*",
+            "*.css",
+            "*.json",
+            "*.md",
+            "*.ts",
+            "**/*.yaml",
+            "**/*.yml",
+        ],
+        exclude = [
+            "dist/**",
+            "node_modules/**",
+            "tmp/**",
+        ],
+    ) + [
+        ".bazelignore",
+        ".bazelrc",
+        ".bazelversion",
+        ".gitignore",
+        ".yarnrc.yml",
+        "BUILD.bazel",
+        "LICENSE",
+        "MODULE.bazel",
+        "mise.toml",
+        "yarn.lock",
+    ],
+)
+
+filegroup(
+    name = "lib_sources",
+    srcs = glob(
+        [
+            "assets/**/*",
+            "setup/**/*",
+            "src/**/*",
+        ],
+    ) + [
+        "package.json",
+        "style.css",
+        "tsconfig.json",
+        "tsdown.config.ts",
+        "yarn.lock",
+    ],
+)
+
+filegroup(
+    name = "test_sources",
+    srcs = glob(
+        [
+            "tests/**/*",
+        ],
+    ) + [
+        "vitest.config.ts",
+    ],
+)
+
+filegroup(
+    name = "check_sources",
+    srcs = [
+        ":lib_sources",
+        ":test_sources",
+    ],
+)
+
+filegroup(
+    name = "repo_sources",
+    srcs = [
+        ":root_sources",
+        "//docs:docs_sources",
+        "//examples/basic:example_sources",
+    ],
+)
+
+genrule(
+    name = "format_check",
+    srcs = [":repo_sources"],
+    outs = ["format_check.stamp"],
+    cmd = """
+set -euo pipefail
+EXEC_ROOT="$$(pwd)"
+OUT_PATH="$$EXEC_ROOT/$@"
+if [ -L package.json ]; then
+  SOURCE_ROOT="$$(cd "$$(dirname "$$(readlink package.json)")" && pwd)"
+else
+  SOURCE_ROOT="$$EXEC_ROOT"
+fi
+cd "$$SOURCE_ROOT"
+yarn fmt:check
+touch "$$OUT_PATH"
+""",
+    local = True,
+    tags = ["no-sandbox"],
+)
+
+genrule(
+    name = "typecheck",
+    srcs = [":check_sources"],
+    outs = ["typecheck.stamp"],
+    cmd = """
+set -euo pipefail
+EXEC_ROOT="$$(pwd)"
+OUT_PATH="$$EXEC_ROOT/$@"
+if [ -L package.json ]; then
+  SOURCE_ROOT="$$(cd "$$(dirname "$$(readlink package.json)")" && pwd)"
+else
+  SOURCE_ROOT="$$EXEC_ROOT"
+fi
+cd "$$SOURCE_ROOT"
+yarn check
+touch "$$OUT_PATH"
+""",
+    local = True,
+    tags = ["no-sandbox"],
+)
+
+genrule(
+    name = "lint_check",
+    srcs = [":check_sources"],
+    outs = ["lint_check.stamp"],
+    cmd = """
+set -euo pipefail
+EXEC_ROOT="$$(pwd)"
+OUT_PATH="$$EXEC_ROOT/$@"
+if [ -L package.json ]; then
+  SOURCE_ROOT="$$(cd "$$(dirname "$$(readlink package.json)")" && pwd)"
+else
+  SOURCE_ROOT="$$EXEC_ROOT"
+fi
+cd "$$SOURCE_ROOT"
+yarn lint
+touch "$$OUT_PATH"
+""",
+    local = True,
+    tags = ["no-sandbox"],
+)
+
+genrule(
+    name = "unit_tests",
+    srcs = [":check_sources"],
+    outs = ["unit_tests.stamp"],
+    cmd = """
+set -euo pipefail
+EXEC_ROOT="$$(pwd)"
+OUT_PATH="$$EXEC_ROOT/$@"
+if [ -L package.json ]; then
+  SOURCE_ROOT="$$(cd "$$(dirname "$$(readlink package.json)")" && pwd)"
+else
+  SOURCE_ROOT="$$EXEC_ROOT"
+fi
+cd "$$SOURCE_ROOT"
+TEST_FILES="$$(find tests -type f -name '*.test.ts' | sort)"
+yarn vitest run $$TEST_FILES
+touch "$$OUT_PATH"
+""",
+    local = True,
+    tags = ["no-sandbox"],
+)
+
+genrule(
+    name = "lib_build",
+    srcs = [":lib_sources"],
+    outs = ["lib_build.stamp"],
+    cmd = """
+set -euo pipefail
+EXEC_ROOT="$$(pwd)"
+OUT_PATH="$$EXEC_ROOT/$@"
+if [ -L package.json ]; then
+  SOURCE_ROOT="$$(cd "$$(dirname "$$(readlink package.json)")" && pwd)"
+else
+  SOURCE_ROOT="$$EXEC_ROOT"
+fi
+cd "$$SOURCE_ROOT"
+yarn build
+touch "$$OUT_PATH"
+""",
+    local = True,
+    tags = ["no-sandbox"],
+)
+
+filegroup(
+    name = "ci_checks",
+    srcs = [
+        ":format_check",
+        ":lint_check",
+        ":typecheck",
+        ":unit_tests",
+    ],
+)
+
+filegroup(
+    name = "ci_all",
+    srcs = [
+        ":ci_checks",
+        ":lib_build",
+        "//docs:site_archive",
+    ],
+)

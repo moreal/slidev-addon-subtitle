@@ -65,6 +65,17 @@ slidev export --with-clicks
 
 The injected subtitle component participates in Slidev click flow, so export pages follow subtitle/click progression.
 
+## Repository workflow (Bazel)
+
+This repository uses Bazelisk through `mise` for CI and docs build.
+
+```bash
+mise trust
+mise install
+mise x -- bazelisk build //:ci_checks
+mise x -- bazelisk build //docs:site_archive
+```
+
 ## Parsing behavior
 
 Default parser behavior (`parseNoteToSubtitleTimeline` + `defaultOptions`):
