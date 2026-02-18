@@ -2,11 +2,10 @@ pre-commit:
   parallel: false
   jobs:
     - name: typecheck
-      run: yarn check
+      run: mise x -- bazelisk build //:typecheck
     - name: lint
-      glob: "*.{ts,js}"
-      run: yarn oxlint {staged_files}
+      run: mise x -- bazelisk build //:lint_check
     - name: format
-      run: yarn fmt:check
+      run: mise x -- bazelisk build //:format_check
     - name: test
-      run: yarn test
+      run: mise x -- bazelisk build //:unit_tests
