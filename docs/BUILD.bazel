@@ -18,8 +18,8 @@ genrule(
     srcs = [
         ":docs_sources",
         "//:lib_sources",
-        "//examples/basic:pdf_en",
-        "//examples/basic:pdf_ko",
+        "//examples/basic:basic.pdf",
+        "//examples/basic:basic-ko.pdf",
     ],
     outs = ["site.tar"],
     cmd = """
@@ -27,8 +27,8 @@ set -euo pipefail
 EXEC_ROOT="$$(pwd)"
 OUT_ARCHIVE="$$EXEC_ROOT/$@"
 OUT_DIR="$$EXEC_ROOT/$(@D)/site"
-PDF_EN="$$EXEC_ROOT/$(location //examples/basic:pdf_en)"
-PDF_KO="$$EXEC_ROOT/$(location //examples/basic:pdf_ko)"
+PDF_EN="$$EXEC_ROOT/$(location //examples/basic:basic.pdf)"
+PDF_KO="$$EXEC_ROOT/$(location //examples/basic:basic-ko.pdf)"
 if [ -L package.json ]; then
   SOURCE_ROOT="$$(cd "$$(dirname "$$(readlink package.json)")" && pwd)"
 else
