@@ -4,6 +4,7 @@ export default defineConfig({
   title: "slidev-addon-subtitle",
   description: "Automatic click-synchronized subtitles for Slidev presentations",
   base: "/slidev-addon-subtitle/",
+  head: [["link", { rel: "icon", href: "/slidev-addon-subtitle/logo.svg" }]],
 
   themeConfig: {
     logo: "/logo.svg",
