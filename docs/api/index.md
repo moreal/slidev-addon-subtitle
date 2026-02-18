@@ -11,12 +11,12 @@ interface SubtitleOptions {
 }
 ```
 
-| Option               | Type       | Default                                              | Description                                              |
-| -------------------- | ---------- | ---------------------------------------------------- | -------------------------------------------------------- |
-| `enabledModes`       | `string[]` | `['export']`                                         | Reserved option (not currently used by built-in setup) |
-| `chunkMode`          | `string`   | `'sentence'`                                         | Subtitle chunking strategy                               |
-| `sentenceDelimiters` | `string[]` | `['.', '!', '?', '。', '！', '？', '…', '\\n']` | Delimiters used when `chunkMode=sentence`                |
-| `maxDisplayWidth`    | `number`   | `80`                                                 | Word-based wrapping width (`fullwidth=2`)                |
+| Option               | Type       | Default                                         | Description                                            |
+| -------------------- | ---------- | ----------------------------------------------- | ------------------------------------------------------ |
+| `enabledModes`       | `string[]` | `['export']`                                    | Reserved option (not currently used by built-in setup) |
+| `chunkMode`          | `string`   | `'sentence'`                                    | Subtitle chunking strategy                             |
+| `sentenceDelimiters` | `string[]` | `['.', '!', '?', '。', '！', '？', '…', '\\n']` | Delimiters used when `chunkMode=sentence`              |
+| `maxDisplayWidth`    | `number`   | `80`                                            | Word-based wrapping width (`fullwidth=2`)              |
 
 ## `SubtitleEntry`
 
