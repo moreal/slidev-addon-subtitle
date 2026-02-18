@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vitepress dev",
-    "prebuild": "rm -rf public/examples && yarn workspace slidev-addon-subtitle-example run export && mkdir -p public/examples && cp ../examples/basic/slides-with-subtitles.pdf public/examples/basic.pdf",
+    "prebuild": "rm -rf public/examples && yarn workspace slidev-addon-subtitle-example run export && yarn workspace slidev-addon-subtitle-example run export:ko && mkdir -p public/examples && cp ../examples/basic/slides-with-subtitles.pdf public/examples/basic.pdf && cp ../examples/basic/slidev-ko-with-subtitles.pdf public/examples/basic-ko.pdf",
     "build": "vitepress build",
     "preview": "vitepress preview"
   },

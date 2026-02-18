@@ -27,4 +27,10 @@ features:
 
 ## Live Demo
 
+### English
+
 <SlideViewer src="./examples/basic.pdf" />
+
+### 한국어
+
+<SlideViewer src="./examples/basic-ko.pdf" />
