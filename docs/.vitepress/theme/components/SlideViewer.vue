@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, shallowRef, watchEffect, onMounted, onUnmounted } from "vue";
+import { ref, shallowRef, computed, watchEffect, onMounted, onUnmounted } from "vue";
 import { withBase } from "vitepress";
 
 const props = defineProps<{ src: string }>();
@@ -8,6 +8,14 @@ const PdfComponent = shallowRef<any>(null);
 const pdf = shallowRef<any>(null);
 const pages = ref(0);
 const currentPage = ref(1);
+const downloadComplete = ref(false);
+
+const loadingStatus = computed(() => {
+  if (!PdfComponent.value) return "importing";
+  if (pdf.value) return "ready";
+  if (downloadComplete.value) return "parsing";
+  return "downloading";
+});
 
 function prev() {
   if (currentPage.value > 1) currentPage.value--;
@@ -26,7 +34,13 @@ onMounted(async () => {
   const { VuePDF, usePDF } = await import("@tato30/vue-pdf");
   PdfComponent.value = VuePDF;
 
-  const result = usePDF(withBase(props.src));
+  const result = usePDF(withBase(props.src), {
+    onProgress: ({ loaded, total }: { loaded: number; total: number }) => {
+      if (total > 0 && loaded >= total) {
+        downloadComplete.value = true;
+      }
+    },
+  });
   watchEffect(() => {
     pdf.value = result.pdf.value;
     pages.value = result.pages.value;
@@ -41,8 +55,13 @@ onUnmounted(() => window.removeEventListener("keydown", onKeydown));
 <template>
   <div class="slide-viewer">
     <div class="slide-viewer-canvas">
+      <div v-if="loadingStatus !== 'ready'" class="slide-viewer-loading">
+        <span v-if="loadingStatus === 'importing'">Loading viewer...</span>
+        <span v-else-if="loadingStatus === 'downloading'">Downloading PDF...</span>
+        <span v-else>Parsing PDF...</span>
+      </div>
       <component
-        v-if="PdfComponent && pdf"
+        v-if="loadingStatus === 'ready'"
         :is="PdfComponent"
         :pdf="pdf"
         :page="currentPage"
@@ -51,7 +70,10 @@ onUnmounted(() => window.removeEventListener("keydown", onKeydown));
     </div>
     <div class="slide-viewer-controls">
       <button :disabled="currentPage <= 1" @click="prev">&#9664; Prev</button>
-      <span class="slide-viewer-indicator">{{ currentPage }} / {{ pages }}</span>
+      <span class="slide-viewer-indicator">
+        <template v-if="loadingStatus === 'ready'">{{ currentPage }} / {{ pages }}</template>
+        <template v-else>Loading...</template>
+      </span>
       <button :disabled="currentPage >= pages" @click="next">Next &#9654;</button>
     </div>
   </div>
@@ -68,6 +90,15 @@ onUnmounted(() => window.removeEventListener("keydown", onKeydown));
 .slide-viewer-canvas {
   width: 100%;
   background: #000;
+}
+
+.slide-viewer-loading {
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.95rem;
 }
 
 .slide-viewer-canvas :deep(canvas) {
