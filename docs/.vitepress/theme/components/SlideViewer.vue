@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, shallowRef, watchEffect, onMounted, onUnmounted } from "vue";
+import { withBase } from "vitepress";
 
 const props = defineProps<{ src: string }>();
 
@@ -25,7 +26,7 @@ onMounted(async () => {
   const { VuePDF, usePDF } = await import("@tato30/vue-pdf");
   PdfComponent.value = VuePDF;
 
-  const result = usePDF(props.src);
+  const result = usePDF(withBase(props.src));
   watchEffect(() => {
     pdf.value = result.pdf.value;
     pages.value = result.pages.value;

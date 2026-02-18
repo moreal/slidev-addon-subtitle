@@ -15,6 +15,9 @@ hero:
     - theme: alt
       text: API Reference
       link: /api/
+    - theme: alt
+      text: Demo
+      link: /demo/basic
 
 features:
   - title: Smart Chunking
@@ -24,13 +27,3 @@ features:
   - title: Export-first Setup
     details: Add the addon once, then run `slidev export --with-clicks`. Subtitles are injected automatically for noted slides.
 ---
-
-## Live Demo
-
-### English
-
-<SlideViewer src="./examples/basic.pdf" />
-
-### 한국어
-
-<SlideViewer src="./examples/basic-ko.pdf" />
