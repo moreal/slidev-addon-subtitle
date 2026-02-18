@@ -8,6 +8,11 @@ addons:
 
 Turn presenter notes into export-ready, click-aware subtitles.
 
+<!--
+[subtitle:pause]
+Welcome! This title slide shows no subtitle on click 0, then this text appears on click 1.
+-->
+
 ---
 
 # 1) No note, no subtitle
@@ -101,7 +106,26 @@ Visible from click 3.
 
 ---
 
-# 6) Wrapping behavior
+# 6) Delayed subtitle with `[subtitle:pause]`
+
+Use `[subtitle:pause]` to skip the first click so the slide appears without any subtitle.
+
+```md
+<!--
+[subtitle:pause]
+This subtitle only appears after the first click.
+-->
+```
+
+<!--
+[subtitle:pause]
+This subtitle only appears after the first click.
+It is useful for title slides where you want a clean visual before the narration begins.
+-->
+
+---
+
+# 7) Wrapping behavior
 
 - Wrapped by word units
 - Fullwidth Unicode (e.g. Korean) counts as width `2`
@@ -114,7 +138,7 @@ When possible, it also merges awkward tiny trailing tails into the previous line
 
 ---
 
-# 7) Export result
+# 8) Export result
 
 `--with-clicks` export records each click step as a separate page state.
 

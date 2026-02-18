@@ -42,6 +42,19 @@ Content here
 -->
 ```
 
+### Delaying subtitles with `[subtitle:pause]`
+
+Use `[subtitle:pause]` at the beginning of a note to show the slide without a subtitle on the first click. The subtitle starts from the next click:
+
+```markdown
+<!--
+[subtitle:pause]
+This text appears only after the first click.
+-->
+```
+
+This is useful for title slides where you want a clean visual before narration begins.
+
 ## Export behavior
 
 Use Slidev export with clicks:
@@ -58,6 +71,7 @@ Default parser behavior (`parseNoteToSubtitleTimeline` + `defaultOptions`):
 
 - Splits notes into timeline entries (default `chunkMode: "sentence"`)
 - Supports `[click]` and `[click:n]`
+- Supports `[subtitle:pause]` to skip a click step (useful for showing a slide without subtitle first)
 - Supports `chunkMode: "line"` for newline-based chunks
 - Wraps by word units using `maxDisplayWidth`
 - Measures display width with fullwidth Unicode characters counted as `2`

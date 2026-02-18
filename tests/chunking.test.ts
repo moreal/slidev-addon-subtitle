@@ -101,6 +101,41 @@ describe("parseNoteToSubtitleTimeline", () => {
     ]);
   });
 
+  it("delays subtitle start when [subtitle:pause] appears before notes", () => {
+    const note = "[subtitle:pause]\n안녕하세요, 오늘 발표를 시작하겠습니다.";
+    expect(parseNoteToSubtitleTimeline(note)).toEqual([
+      { start: 0, text: "" },
+      { start: 1, text: "안녕하세요, 오늘 발표를 시작하겠습니다." },
+    ]);
+  });
+
+  it("advances cursor by one when [subtitle:pause] appears in the middle", () => {
+    const note = "첫 문장입니다.\n[subtitle:pause]\n둘째 문장입니다.";
+    expect(parseNoteToSubtitleTimeline(note)).toEqual([
+      { start: 0, text: "첫 문장입니다." },
+      { start: 1, text: "" },
+      { start: 2, text: "둘째 문장입니다." },
+    ]);
+  });
+
+  it("works with [subtitle:pause] and [click] together", () => {
+    const note = "[subtitle:pause]\n첫 문장입니다.\n[click]\n둘째 문장입니다.";
+    expect(parseNoteToSubtitleTimeline(note)).toEqual([
+      { start: 0, text: "" },
+      { start: 1, text: "첫 문장입니다." },
+      { start: 2, text: "둘째 문장입니다." },
+    ]);
+  });
+
+  it("works with [subtitle:pause] inline within a line", () => {
+    const note = "앞 문장입니다. [subtitle:pause] 뒤 문장입니다.";
+    expect(parseNoteToSubtitleTimeline(note)).toEqual([
+      { start: 0, text: "앞 문장입니다." },
+      { start: 1, text: "" },
+      { start: 2, text: "뒤 문장입니다." },
+    ]);
+  });
+
   it("avoids tiny trailing tail chunks when a small overflow creates better balance", () => {
     const note = "aaaaaaaaaaaaaaa bbbbbbbbbbbbbbb ccccccccccccccc 요";
     expect(parseNoteToSubtitleTimeline(note, { chunkMode: "line", maxDisplayWidth: 16 })).toEqual([

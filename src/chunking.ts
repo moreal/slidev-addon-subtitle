@@ -1,6 +1,7 @@
 import { type SubtitleEntry, type SubtitleOptions, defaultOptions } from "./types";
 
 const CLICK_MARKER_RE = /^\[click(?::(\d+))?\]$/i;
+const SUBTITLE_PAUSE_RE = /^\[subtitle:pause\]$/i;
 const COMBINING_MARK_RE = /\p{Mark}/u;
 
 export function parseNoteToSubtitleTimeline(
@@ -18,7 +19,7 @@ export function parseNoteToSubtitleTimeline(
 
 function buildTimeline(note: string, options: SubtitleOptions): SubtitleEntry[] {
   const entries: SubtitleEntry[] = [];
-  const lines = note.split("\n");
+  const lines = note.replace(/\[subtitle:pause\]/gi, "\n[subtitle:pause]\n").split("\n");
 
   let cursor = 0;
   let current: string[] = [];
@@ -43,7 +44,16 @@ function buildTimeline(note: string, options: SubtitleOptions): SubtitleEntry[] 
   };
 
   for (const line of lines) {
-    const match = line.trim().match(CLICK_MARKER_RE);
+    const trimmed = line.trim();
+
+    if (SUBTITLE_PAUSE_RE.test(trimmed)) {
+      flush();
+      entries.push({ start: cursor, text: "" });
+      cursor += 1;
+      continue;
+    }
+
+    const match = trimmed.match(CLICK_MARKER_RE);
     if (!match) {
       current.push(line);
       continue;

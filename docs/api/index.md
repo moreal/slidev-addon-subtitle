@@ -50,12 +50,13 @@ Converts a note string into a click-driven subtitle timeline.
 Parsing rules:
 
 1. Normalize CRLF to LF and trim
-2. Handle `[click]` and `[click:n]` markers
+2. Handle `[click]`, `[click:n]`, and `[subtitle:pause]` markers
 3. Split text by `chunkMode`
 4. Wrap long chunks by word units using display width (`fullwidth=2`, combining marks=`0`)
 5. Optimize wrapping for balanced chunk sizes
 6. Avoid tiny trailing one-word chunks when a small overflow merge is better
 7. Keep starts monotonic when marker values overlap or go backward
+8. `[subtitle:pause]` flushes current buffer and advances cursor by 1, producing a click step with no subtitle
 
 ## Built-in Setup Behavior
 
