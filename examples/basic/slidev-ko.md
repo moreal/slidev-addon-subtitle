@@ -3,7 +3,7 @@ theme: default
 addons:
   - subtitle
 fonts:
-  sans: Noto Sans KR
+  sans: Noto Sans KR, Noto Color Emoji
   mono: Fira Code
 ---
 
