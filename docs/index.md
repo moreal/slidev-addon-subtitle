@@ -8,6 +8,8 @@ hero:
   image:
     src: /logo.svg
     alt: slidev-addon-subtitle
+    width: 280
+    height: 280
   actions:
     - theme: brand
       text: Get Started
