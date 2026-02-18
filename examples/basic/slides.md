@@ -2,6 +2,9 @@
 theme: default
 addons:
   - subtitle
+fonts:
+  sans: Noto Sans
+  mono: Fira Code
 ---
 
 # slidev-addon-subtitle Demo

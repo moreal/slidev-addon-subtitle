@@ -2,6 +2,9 @@
 theme: default
 addons:
   - subtitle
+fonts:
+  sans: Noto Sans KR
+  mono: Fira Code
 ---
 
 <div class="flex items-center justify-center h-full">
