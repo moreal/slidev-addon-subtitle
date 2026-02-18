@@ -27,6 +27,4 @@ features:
 
 ## Live Demo
 
-<div class="demo-frame">
-  <iframe src="./examples/basic.pdf" loading="lazy"></iframe>
-</div>
+<SlideViewer src="./examples/basic.pdf" />

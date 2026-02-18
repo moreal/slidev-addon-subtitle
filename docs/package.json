@@ -9,6 +9,7 @@
     "preview": "vitepress preview"
   },
   "devDependencies": {
+    "@tato30/vue-pdf": "^2.0",
     "vitepress": "^1.6"
   }
 }
