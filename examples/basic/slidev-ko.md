@@ -9,6 +9,7 @@ addons:
 </div>
 
 <!--
+[subtitle:pause]
 안녕하세요, 오늘은 제가 만든 slidev-addon-subtitle이라는 라이브러리를 소개하려고 합니다.
 -->
 
@@ -22,13 +23,13 @@ addons:
 발표 슬라이드에 글을 많이 적지 말라는 이야기, 들어보셨나요?
 저도 글이 많이 슬라이드라면 슬라이드를 읽는 데만 더 집중하게 되어 발표자의 목소리에는 보다 덜 집중하게 되기 때문에, 그 말에 동의합니다.
 하지만 발표가 끝난 뒤 슬라이드를 공유하면, 나중에 읽는 사람 입장에서는 정보가 너무 적어서 맥락을 이해하기 어렵습니다.
-만약 이 슬라이드에 자막 없이 🤔 이모티콘 하나만 있다고 상상해보세요. 발표자는 이 슬라이드에서 무엇을 이야기했을까요?
+만약 이 슬라이드에 자막 없이 🤔 이모티콘 하나만 있다고 상상해보세요. [subtitle:pause] 발표자는 이 슬라이드에서 무엇을 이야기했을까요?
 -->
 
 ---
 
 <div class="flex items-center justify-center h-full">
-  <span class="text-5xl font-bold font-mono">자막 있는 슬라이드</span>
+  <span class="text-5xl font-bold font-mono">읽히는 슬라이드</span>
 </div>
 
 <!--
@@ -79,6 +80,7 @@ addons:
 ---
 
 <!--
+[subtitle:pause]
 발표자 노트를 평소처럼 작성하세요.
 [click]
 클릭 타이밍에 맞춰 자막을 나눌 수 있습니다.
